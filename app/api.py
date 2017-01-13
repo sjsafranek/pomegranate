@@ -80,13 +80,10 @@ def zone_info(request):
 @login_required(login_url='/')
 def zone_export(request):
     '''Returns csv file containing zone measurements'''
-    t1 = time.time()
     # TODO: superuser only!!
     if request.method == "GET":
-
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = 'attachment; filename="zones.csv"'
-
         writer = csv.writer(response)
         writer.writerow([
             "id",
@@ -103,7 +100,6 @@ def zone_export(request):
             "laptops",
             "furniture_moved",
             "unix_timestamp"])
-
         for zone in Zone.objects.all():
             writer.writerow([
                 zone.id,
@@ -120,8 +116,6 @@ def zone_export(request):
                 zone.laptops,
                 zone.furniture_moved,
                 zone.unix_timestamp])
-		
-        print(time.time() - t1)
         return response
 
 
@@ -131,8 +125,10 @@ def zone_export(request):
 
 
 
-
-
+#from . import ligneous
+#log = ligneous.log("Worker")
+worker_logger = logging.getLogger('django')
+import random
 
 class Worker(threading.Thread):
     def __init__(self, writer, queue):
@@ -144,12 +140,14 @@ class Worker(threading.Thread):
             # read from queue
             # stop worker when queue is empty
             if self._queue.empty():
-                print("die!") # if so, exists the loop
+                #print("die!") # if so, exists the loop
                 break
             # write csv row
             else:
                 zone = self._queue.get()
+                #time.sleep(random.random()/10)
                 #print("remaining jobs:", self._queue.qsize())
+                worker_logger.debug("Cool")
                 self._writer.writerow([
 					zone.id,
 					zone.uuid,
@@ -188,7 +186,6 @@ def process(writer):
 @login_required(login_url='/')
 def zone_export_multithread(request):
     '''Returns csv file containing zone measurements'''
-    t1 = time.time()
     # TODO: superuser only!!
     if request.method == "GET":
         response = HttpResponse(content_type="text/csv")
@@ -210,6 +207,5 @@ def zone_export_multithread(request):
             "furniture_moved",
             "unix_timestamp"])
         process(writer)
-        print(time.time() - t1)
         return response
 
