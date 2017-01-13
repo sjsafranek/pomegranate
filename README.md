@@ -1,4 +1,4 @@
-# findauth
+# Pomegranate
 
 
 ## Quick Start
