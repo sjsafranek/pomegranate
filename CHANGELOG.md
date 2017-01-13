@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+
+## 0.01.3 2017-01-13
+### Added
+ - unix timestamp to models
+
 ## 0.01.2 2017-01-13
 ### Added
  - login template with local storage
