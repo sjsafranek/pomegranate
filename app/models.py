@@ -14,13 +14,13 @@ class Furniture(models.Model):
     id = models.AutoField(primary_key=True)
     uuid = models.CharField(max_length=50)
     name = models.CharField(max_length=25)
+    floor = models.IntegerField(validators = [MinValueValidator(-5), MaxValueValidator(5)])
     furinture_type = models.CharField(max_length=5, choices=TYPES)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
     user = models.CharField(max_length=25)
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
-    # owner = models.ForeignKey(Group)
 
 class Zone(models.Model):
     id = models.AutoField(primary_key=True)
