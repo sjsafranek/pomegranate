@@ -17,20 +17,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 
 from django.contrib.auth.models import User
 # from django.contrib.auth.models import Group
 from django.contrib.auth.hashers import check_password
-
-from .models import Zone
-from .models import Furniture
-
-import json
-
-# Create your views here.
-# @login_required(login_url='/')
-# def index(request):
-#     return HttpResponse("Hello, world. You're at the polls index.")
 
 
 # My hacky way of doing Jinja2 rendering because
@@ -38,6 +29,7 @@ import json
 # so fuck that. - Zack Scholl
 from jinja2 import Environment, FileSystemLoader
 env = Environment(loader=FileSystemLoader('sarah_app/templates'))
+
 
 # import the logging library
 import logging

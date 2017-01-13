@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from django.db import models
-from django.contrib.auth.models import Group
+#from django.contrib.auth.models import Group
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Furniture(models.Model):
