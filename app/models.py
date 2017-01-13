@@ -4,6 +4,32 @@ from django.db import models
 #from django.contrib.auth.models import Group
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+from . import utils
+
+'''
+class UnixDateTimeField(models.DateTimeField):
+
+    __metaclass__ = models.SubfieldBase
+
+    def get_internal_type(self):
+        return 'PositiveIntegerField'
+
+    def to_python(self, value):
+        if value is None or isinstance(value, datetime):
+            return value
+        if isinstance(value, date):
+            return datetime(value.year, value.month, value.day)
+        return datetime.fromtimestamp( float(value) )
+
+    def get_db_prep_value(self, value):
+        return int( time.mktime( value.timetuple() ) )
+
+    def value_to_string(self, obj):
+        value = self._get_val_from_obj(obj)
+        return self.to_python(value).strftime('%Y-%m-%d %H:%M:%S')
+'''
+
+
 class Furniture(models.Model):
     TYPES = (
         ('TABLE', 'TABLE'),
@@ -21,6 +47,8 @@ class Furniture(models.Model):
     user = models.CharField(max_length=25)
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
+    #unix_timestamp = UnixDateTimeField()
+    unix_timestamp = models.IntegerField(default=utils.unix_timestamp())
 
 class Zone(models.Model):
     id = models.AutoField(primary_key=True)
@@ -36,4 +64,6 @@ class Zone(models.Model):
     collab = models.IntegerField()
     laptops = models.IntegerField()
     furniture_moved = models.IntegerField()
+    #unix_timestamp = UnixDateTimeField()
+    unix_timestamp = models.IntegerField(default=utils.unix_timestamp())
 

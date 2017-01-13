@@ -1,9 +1,7 @@
 #!/usr/bin/python
 
 # Import redirect and render shortcuts
-# from django.shortcuts import render
-from django.shortcuts import redirect
-# from django.shortcuts import render_to_response
+#from django.shortcuts import redirect
 
 # Import reverse_lazy method for reversing names to URLs
 # from django.core.urlresolvers import reverse_lazy
@@ -19,13 +17,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.http import JsonResponse
 
-# from django.contrib.auth.models import User
-# from django.contrib.auth.models import Group
-# from django.contrib.auth.hashers import check_password
-
 # Import models
 from .models import Zone
 from .models import Furniture
+
+from . import utils
 
 # Import standard modules for data parsing and responses
 import csv
@@ -70,7 +66,8 @@ def zone_info(request):
                                 outlets = data["outlets"],
                                 collab = data["collab"],
                                 laptops = data["laptops"],
-                                furniture_moved = data["furniture_moved"]
+                                furniture_moved = data["furniture_moved"],
+                                unix_timestamp = utils.unix_timestamp()
                                 # owner=group
                             )
                     zone.save()
@@ -111,7 +108,8 @@ def zone_export(request):
             "outlets",
             "collab",
             "laptops",
-            "furniture_moved"])
+            "furniture_moved",
+            "unix_timestamp"])
 
         for zone in Zone.objects.all():
             writer.writerow([
@@ -127,7 +125,8 @@ def zone_export(request):
                 zone.outlets,
                 zone.collab,
                 zone.laptops,
-                zone.furniture_moved])
+                zone.furniture_moved,
+                zone.unix_timestamp])
 
         return response
 
