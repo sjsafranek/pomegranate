@@ -1,11 +1,5 @@
 #!/usr/bin/python
 
-# Import redirect and render shortcuts
-#from django.shortcuts import redirect
-
-# Import reverse_lazy method for reversing names to URLs
-# from django.core.urlresolvers import reverse_lazy
-
 # Import the login_required decorator which can be applied to views 
 # to enforce that the user should be logged in to access the view
 from django.contrib.auth.decorators import login_required
@@ -26,19 +20,17 @@ from . import utils
 # Import standard modules for data parsing and responses
 import csv
 import json
+import sys
+import multiprocessing
+import threading
+import queue as queue
+
+import time
 
 # import the logging library
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-'''
-Logging -
-    logger.debug()
-    logger.info()
-    logger.warning()
-    logger.error()
-    logger.critical()
-'''
 
 @csrf_exempt
 @login_required(login_url='/')
@@ -88,6 +80,7 @@ def zone_info(request):
 @login_required(login_url='/')
 def zone_export(request):
     '''Returns csv file containing zone measurements'''
+    t1 = time.time()
     # TODO: superuser only!!
     if request.method == "GET":
 
@@ -127,6 +120,96 @@ def zone_export(request):
                 zone.laptops,
                 zone.furniture_moved,
                 zone.unix_timestamp])
+		
+        print(time.time() - t1)
+        return response
 
+
+
+
+
+
+
+
+
+
+
+class Worker(threading.Thread):
+    def __init__(self, writer, queue):
+        threading.Thread.__init__(self)
+        self._writer = writer
+        self._queue = queue
+    def run(self):
+        while True:
+            # read from queue
+            # stop worker when queue is empty
+            if self._queue.empty():
+                print("die!") # if so, exists the loop
+                break
+            # write csv row
+            else:
+                zone = self._queue.get()
+                #print("remaining jobs:", self._queue.qsize())
+                self._writer.writerow([
+					zone.id,
+					zone.uuid,
+					zone.name,
+					zone.created_timestamp,
+					zone.updated_timestamp,
+					zone.username,
+					zone.state,
+					zone.noise,
+					zone.users,
+					zone.outlets,
+					zone.collab,
+					zone.laptops,
+					zone.furniture_moved,
+					zone.unix_timestamp])
+
+queue = queue.Queue()
+
+def process(writer):
+    # spawn workers
+    workers = []
+    pool_size =  multiprocessing.cpu_count() * 2
+    for i in range(pool_size):
+        worker = Worker(writer, queue)
+        workers.append(worker)
+    # fill queue with jobs
+    for zone in Zone.objects.all():
+        queue.put(zone)
+    # start workers
+    for i in range(len(workers)):
+        workers[i].start()
+    # wait for the thread to close down
+    for i in range(len(workers)):
+        worker.join()
+
+@login_required(login_url='/')
+def zone_export_multithread(request):
+    '''Returns csv file containing zone measurements'''
+    t1 = time.time()
+    # TODO: superuser only!!
+    if request.method == "GET":
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="zones.csv"'
+        writer = csv.writer(response)
+        writer.writerow([
+            "id",
+            "uuid",
+            "name",
+            "created_timestamp",
+            "updated_timestamp",
+            "username",
+            "state",
+            "noise",
+            "users",
+            "outlets",
+            "collab",
+            "laptops",
+            "furniture_moved",
+            "unix_timestamp"])
+        process(writer)
+        print(time.time() - t1)
         return response
 

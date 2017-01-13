@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^logout/$', auth_views.logout, { "next_page" : '/'}),
     url(r'^map$', views.map),
     url(r'^api/v1/zone$', api.zone_info),
-    url(r'^api/v1/zones/export$', api.zone_export)
+    url(r'^api/v1/zones/export$', api.zone_export),
+    url(r'^api/v2/zones/export$', api.zone_export_multithread)
 ]
 
