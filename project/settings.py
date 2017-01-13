@@ -126,9 +126,13 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
 	'formatters': {
-        'verbose': {
+        'color': {
             #'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
             '()': 'djangocolors_formatter.DjangoColorsFormatter',
+			'format': "%(asctime)s [%(levelname)s] [%(name)s] %(filename)s line:%(lineno)d : %(message)s",
+        },
+        'verbose': {
+            #'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
 			'format': "%(asctime)s [%(levelname)s] [%(name)s] %(filename)s line:%(lineno)d : %(message)s",
         },
         'simple': {
@@ -139,12 +143,12 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'log/debug.log',
+            'filename': 'log/server.log',
             'formatter': 'verbose'
         },
 		'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
+            'formatter': 'color'
         },
     },
     'loggers': {
