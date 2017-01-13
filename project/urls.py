@@ -18,6 +18,6 @@ from django.conf.urls import include
 from django.contrib import admin
 
 urlpatterns = [
-	url(r'^', include('pomegranate.urls')),
+	url(r'^', include('app.urls')),
     url(r'^admin/', admin.site.urls),
 ]
