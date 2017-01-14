@@ -89,38 +89,21 @@ def zone_export(request):
         writer.writerow([
             "id",
             "uuid",
-            "name",
             "created_timestamp",
             "updated_timestamp",
             "username",
-            "state",
-            "noise",
-            "users",
-            "outlets",
-            "collab",
-            "laptops",
-            "furniture_moved",
+            "outlets_used",
             "unix_timestamp"])
         for zone in Zone.objects.all():
             writer.writerow([
                 zone.id,
                 zone.uuid,
-                zone.name,
                 zone.created_timestamp,
                 zone.updated_timestamp,
                 zone.username,
-                zone.state,
-                zone.noise,
-                zone.users,
-                zone.outlets,
-                zone.collab,
-                zone.laptops,
-                zone.furniture_moved,
+                zone.outlets_user,
                 zone.unix_timestamp])
         return response
-
-
-
 
 
 
@@ -147,20 +130,13 @@ class Worker(threading.Thread):
                 zone = self._queue.get()
                 self.c += 1
                 self._writer.writerow([
-					zone.id,
-					zone.uuid,
-					zone.name,
-					zone.created_timestamp,
-					zone.updated_timestamp,
-					zone.username,
-					zone.state,
-					zone.noise,
-					zone.users,
-					zone.outlets,
-					zone.collab,
-					zone.laptops,
-					zone.furniture_moved,
-					zone.unix_timestamp])
+                zone.id,
+                zone.uuid,
+                zone.created_timestamp,
+                zone.updated_timestamp,
+                zone.username,
+                zone.outlets_user,
+                zone.unix_timestamp])
 
 def process(writer):
     job_id = utils.short_uuid()
@@ -194,17 +170,10 @@ def zone_export_multithread(request):
         writer.writerow([
             "id",
             "uuid",
-            "name",
             "created_timestamp",
             "updated_timestamp",
             "username",
-            "state",
-            "noise",
-            "users",
-            "outlets",
-            "collab",
-            "laptops",
-            "furniture_moved",
+            "outlets_used",
             "unix_timestamp"])
         process(writer)
         return response

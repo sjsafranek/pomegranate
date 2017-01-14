@@ -6,50 +6,83 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 from . import utils
 
-'''
-class UnixDateTimeField(models.DateTimeField):
-
-    __metaclass__ = models.SubfieldBase
-
-    def get_internal_type(self):
-        return 'PositiveIntegerField'
-
-    def to_python(self, value):
-        if value is None or isinstance(value, datetime):
-            return value
-        if isinstance(value, date):
-            return datetime(value.year, value.month, value.day)
-        return datetime.fromtimestamp( float(value) )
-
-    def get_db_prep_value(self, value):
-        return int( time.mktime( value.timetuple() ) )
-
-    def value_to_string(self, obj):
-        value = self._get_val_from_obj(obj)
-        return self.to_python(value).strftime('%Y-%m-%d %H:%M:%S')
-'''
-
 
 class Furniture(models.Model):
     TYPES = (
-        ('TABLE', 'TABLE'),
-        ('CHAIR', 'CHAIR'),
         ('COUCH', 'COUCH'),
-        ('DESK', 'DESK'),
+        ('CHAIR ARM', 'CHAIR ARM'),
+        ('CHAIR TALL', 'CHAIR TALL'),
+        ('CHAIR YELLOW', 'CHAIR YELLOW'),
+        ('CHAIR GREY', 'CHAIR GREY'),
+        ('CHAIR ARMLESS', 'CHAIR ARMLESS'),
+        ('TABLE TALL', 'TABLE TALL'),
+        ('TABLE SHORT', 'TABLE SHORT'),
+        ('TABLE REGULAR', 'TABLE REGULAR'),
+        ('TABLE GLASS', 'TABLE GLASS'),
+        ('DESK PUBLIC', 'DESK PUBLIC'),
+        ('DESK CONSULTATION', 'DESK CONSULTATION'),
+        ('DESK TALL', 'DESK TALL'),
+        ('DESK OSX', 'DESK OSX'),
+        ('DESK WIN', 'DESK WIN'),
+        ('DESK OSX w/ SCANNER', 'DESK OSX w/ SCANNER'),
+        ('DESK WIN w/ SCANNER', 'DESK WIN w/ SCANNER'),
+        ('DESK LAPTOP', 'DESK LAPTOP'),
+        ('TABLE BIG MAP', 'TABLE BIG MAP'),
     )
     id = models.AutoField(primary_key=True)
     uuid = models.CharField(max_length=50)
-    name = models.CharField(max_length=25)
-    floor = models.IntegerField(validators = [MinValueValidator(-5), MaxValueValidator(5)])
-    furinture_type = models.CharField(max_length=5, choices=TYPES)
+    rfid = models.CharField(max_length=50)
+    furniture_type = models.CharField(max_length=25, choices=TYPES)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
-    user = models.CharField(max_length=25)
+    unix_timestamp = models.IntegerField()
+    username = models.CharField(max_length=25)
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
-    #unix_timestamp = UnixDateTimeField()
-    #unix_timestamp = models.IntegerField(default=utils.unix_timestamp())
+
+    def save(self, force_insert=False, force_update=False, using=None):
+        if not self.id:
+            self.unix_timestamp = utils.unix_timestamp()
+        if not self.uuid:
+            self.uuid = utils.long_uuid()
+        self.unix_timestamp = utils.unix_timestamp()
+        super(Zone, self).save()
+
+    def toGeoJSON(self):
+        return  { 
+            "type": "Feature",
+            "geometry": {
+                "type": "Point", 
+                "coordinates": [self.longitude, self.latitude]
+            },
+            "properties": {
+                "uuid": self.uuid,
+                "rfid": self.rfid,
+                "furniture_type": self.furniture_type
+            }
+        }
+
+
+class Person(models.Model):
+    PERSON_TYPE = (
+        ('ACADEMIC', 'ACADEMIC'),
+        ('PUBLIC', 'PUBLIC'),
+    )
+    COMPUTER_TYPE = (
+        ('DESKTOP', 'DESKTOP'),
+        ('LAPTOP', 'LAPTOP'),
+        ('NONE', 'NONE'),
+    )
+    id = models.AutoField(primary_key=True)
+    person_type = models.CharField(max_length=25, choices=PERSON_TYPE)
+    collab = models.BooleanField()
+    computer_type = models.CharField(max_length=25, choices=COMPUTER_TYPE)
+    created_timestamp = models.DateTimeField(auto_now_add=True)
+    updated_timestamp = models.DateTimeField(auto_now=True)
     unix_timestamp = models.IntegerField()
+    username = models.CharField(max_length=25)
+    latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
+    longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
 
     def save(self, force_insert=False, force_update=False, using=None):
         if not self.id:
@@ -61,26 +94,34 @@ class Furniture(models.Model):
 class Zone(models.Model):
     id = models.AutoField(primary_key=True)
     uuid = models.CharField(max_length=50)
-    name = models.CharField(max_length=25)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
-    username = models.CharField(max_length=25)
-    state = models.IntegerField(validators = [MinValueValidator(0), MaxValueValidator(1)])
-    noise = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(5)])
-    users = models.IntegerField()
-    outlets = models.IntegerField()
-    collab = models.IntegerField()
-    laptops = models.IntegerField()
-    furniture_moved = models.IntegerField()
-    #unix_timestamp = UnixDateTimeField()
-    #unix_timestamp = models.IntegerField(default=utils.unix_timestamp())
     unix_timestamp = models.IntegerField()
+    username = models.CharField(max_length=25)
+    outlets_used = models.IntegerField()
 
     def save(self, force_insert=False, force_update=False, using=None):
         if not self.id:
             self.unix_timestamp = utils.unix_timestamp()
         self.unix_timestamp = utils.unix_timestamp()
         super(Zone, self).save()
+
+
+class Room(models.Model):
+    id = models.AutoField(primary_key=True)
+    created_timestamp = models.DateTimeField(auto_now_add=True)
+    updated_timestamp = models.DateTimeField(auto_now=True)
+    unix_timestamp = models.IntegerField()
+    username = models.CharField(max_length=25)
+    messy = models.BooleanField()
+    noise = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(5)])
+
+    def save(self, force_insert=False, force_update=False, using=None):
+        if not self.id:
+            self.unix_timestamp = utils.unix_timestamp()
+        self.unix_timestamp = utils.unix_timestamp()
+        super(Zone, self).save()
+
 
 
 #from django.contrib.gis.geos import Point

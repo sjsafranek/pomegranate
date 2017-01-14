@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+
+
+## 0.01.5 2017-01-13
+### Changed
+ - Split Zones table and added Rooms table
+ = Split Furninture table and added Persons table
+
 ## 0.01.4 2017-01-13
 ### Added
  - geodjango
