@@ -35,6 +35,7 @@
 			.login-form {
 				padding-left:17px;
 				padding-right:17px;
+				height: 182px;
 			}
 		</style>
 
@@ -45,7 +46,7 @@
             <div class="wrapper">
                 <header>
                     <div>
-                        <canvas id='rotatingGlobe' width='280' height='280' style='cursor: move;'></canvas>
+                        <canvas id='rotatingGlobe' width='310' height='310' style='cursor: move;'></canvas>
                     </div>
                  <!--   
                     <div class="author-container"><h1>Pomegranate</h1></div>
@@ -198,8 +199,8 @@
 			  }));
 			  // Set up the globe's initial scale, offset, and rotation.
 			  globe.projection
-				.scale(125) //.scale(175)
-				.translate([150, 127])
+				.scale(150) //.scale(175)
+				.translate([154, 152])
 				.rotate([0, -10, 0]);
 
 			  // Every few hundred milliseconds, we'll draw another random ping.

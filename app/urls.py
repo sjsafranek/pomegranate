@@ -17,4 +17,3 @@ urlpatterns = [
     url(r'^api/v1/zones/export$', api.zone_export),
     url(r'^api/v2/zones/export$', api.zone_export_multithread)
 ]
-

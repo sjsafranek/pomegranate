@@ -16,21 +16,20 @@ from .models import Zone
 from .models import Furniture
 
 from . import utils
+from . import database
+
 
 # Import standard modules for data parsing and responses
 import csv
 import json
 import sys
+import logging
 import multiprocessing
 import threading
 import queue as queue
 
-import time
+#logger = logging.getLogger(__name__)
 
-# import the logging library
-import logging
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
 
 @csrf_exempt
 @login_required(login_url='/')
@@ -62,13 +61,13 @@ def zone_info(request):
                                 unix_timestamp = utils.unix_timestamp()
                                 # owner=group
                             )
-                    zone.save()
+                    #zone.save()
+                    database.commit(zone)
                     return JsonResponse({"status":"ok"})
                 else:
                     return JsonResponse({"status":"fail","data":{"error":"please login"}})
             except Exception as e:
-                print(e)
-                return JsonResponse({"status":"fail", "data":{}})
+                return JsonResponse({"status":"fail", "data":{"error": str(e)}})
         else:
             # TODO: handle web form
             # Stuff here
@@ -77,11 +76,13 @@ def zone_info(request):
     return JsonResponse({"status":"fail"})
 
 
+
 @login_required(login_url='/')
 def zone_export(request):
     '''Returns csv file containing zone measurements'''
     # TODO: superuser only!!
     if request.method == "GET":
+		#job_id = utils.short_uuid()
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = 'attachment; filename="zones.csv"'
         writer = csv.writer(response)
@@ -124,7 +125,6 @@ def zone_export(request):
 
 
 worker_logger = logging.getLogger('worker')
-import random
 
 class Worker(threading.Thread):
     def __init__(self, job_id, worker_id, writer, job_queue):
@@ -167,7 +167,7 @@ def process(writer):
     job_queue = queue.Queue()
     # spawn workers
     workers = []
-    pool_size =  multiprocessing.cpu_count() * 2
+    pool_size =  multiprocessing.cpu_count() # * 2
     for i in range(pool_size):
         worker = Worker(job_id, i, writer, job_queue)
         workers.append(worker)
