@@ -43,23 +43,11 @@ def zone_info(request):
                     # read post body for data
                     body = request.body.decode("utf-8") 
                     data = json.loads(body)
-                    # get username
-                    username = request.user.username
                     # create new zone to store data
                     zone = Zone.objects.create(
                                 uuid = data["uuid"],
-                                name = data["name"],
-                                # username=request.POST["username"]
-                                username = username,
-                                state = data["state"],
-                                noise = data["noise"],
-                                users = data["users"],
-                                outlets = data["outlets"],
-                                collab = data["collab"],
-                                laptops = data["laptops"],
-                                furniture_moved = data["furniture_moved"]
-                                #unix_timestamp = utils.unix_timestamp()
-                                # owner=group
+                                username = request.user.username,
+                                outlets_used = data["outlets_used"]
                             )
                     #zone.save()
                     database.commit(zone)
