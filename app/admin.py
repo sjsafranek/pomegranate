@@ -8,7 +8,6 @@ from .models import Person
 from .models import Room
 
 #admin.site.register(Zone, admin.ModelAdmin)
-#admin.site.register(Furniture, admin.ModelAdmin)
 admin.site.register(Zone, admin.GeoModelAdmin)
 admin.site.register(Furniture, admin.GeoModelAdmin)
 admin.site.register(Person, admin.GeoModelAdmin)

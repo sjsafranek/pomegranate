@@ -8,12 +8,16 @@ from django.contrib.auth import views as auth_views
 
 from . import views
 from . import api
+from . import apiV2
 
 urlpatterns = [
     url(r'^$', auth_views.login, { "template_name" : "login.html"}),
     url(r'^logout/$', auth_views.logout, { "next_page" : '/'}),
     url(r'^map$', views.map),
     url(r'^api/v1/zone$', api.zone_info),
+	url(r'^api/v1/room$', api.room_info),
+	url(r'^api/v1/furniture$', api.furniture_info),
+	url(r'^api/v1/person$', api.person_info),
     url(r'^api/v1/zones/export$', api.zone_export),
-    url(r'^api/v2/zones/export$', api.zone_export_multithread)
+    url(r'^api/v2/zones/export$', apiV2.zone_export_multithread)
 ]

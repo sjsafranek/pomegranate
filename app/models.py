@@ -124,10 +124,8 @@ class Room(models.Model):
 
 
 
-#from django.contrib.gis.geos import Point
-#pnt = Point(12.4604, 43.9420)
-#geom = models.PointField(srid=4326)
-#from django.contrib.gis import admin
-#from .models import WorldBorder
-#admin.site.register(WorldBorder, admin.GeoModelAdmin)
+# from django.contrib.gis.geos import Point
+# pnt = Point(12.4604, 43.9420)
+# geom = models.PointField(srid=4326)
+
 
