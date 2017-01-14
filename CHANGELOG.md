@@ -2,8 +2,12 @@
 
 ## Unreleased
 
-
-
+## 0.01.4 2017-01-13
+### Added
+ - geodjango
+ - uuid generation for debugging
+### Fixed
+ - unix timestamp generated from models
 
 ## 0.01.3 2017-01-13
 ### Added
@@ -26,3 +30,4 @@
 ## 0.01.0 2017-01-12
 ### Added
  - Django app with basic models, urls, views
+
