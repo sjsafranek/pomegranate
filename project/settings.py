@@ -205,7 +205,7 @@ LOGGING = {
         },
         'django.template': {
 			'handlers': ['console','django'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': False,
         },
         'django.db.backends': {

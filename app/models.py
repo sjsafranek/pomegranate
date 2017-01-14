@@ -48,7 +48,15 @@ class Furniture(models.Model):
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
     #unix_timestamp = UnixDateTimeField()
-    unix_timestamp = models.IntegerField(default=utils.unix_timestamp())
+    #unix_timestamp = models.IntegerField(default=utils.unix_timestamp())
+    unix_timestamp = models.IntegerField()
+
+    def save(self, force_insert=False, force_update=False, using=None):
+        if not self.id:
+            self.unix_timestamp = utils.unix_timestamp()
+        self.unix_timestamp = utils.unix_timestamp()
+        super(Zone, self).save()
+
 
 class Zone(models.Model):
     id = models.AutoField(primary_key=True)
@@ -65,7 +73,14 @@ class Zone(models.Model):
     laptops = models.IntegerField()
     furniture_moved = models.IntegerField()
     #unix_timestamp = UnixDateTimeField()
-    unix_timestamp = models.IntegerField(default=utils.unix_timestamp())
+    #unix_timestamp = models.IntegerField(default=utils.unix_timestamp())
+    unix_timestamp = models.IntegerField()
+
+    def save(self, force_insert=False, force_update=False, using=None):
+        if not self.id:
+            self.unix_timestamp = utils.unix_timestamp()
+        self.unix_timestamp = utils.unix_timestamp()
+        super(Zone, self).save()
 
 
 #from django.contrib.gis.geos import Point
@@ -75,5 +90,3 @@ class Zone(models.Model):
 #from .models import WorldBorder
 #admin.site.register(WorldBorder, admin.GeoModelAdmin)
 
-#from django.contrib.gis import admin
-#url(r'^admin/', admin.site.urls),

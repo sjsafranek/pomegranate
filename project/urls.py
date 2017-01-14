@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.conf.urls import include
-from django.contrib import admin
+#from django.contrib import admin
+from django.contrib.gis import admin
 
 urlpatterns = [
 	url(r'^', include('app.urls')),

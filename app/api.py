@@ -57,8 +57,8 @@ def zone_info(request):
                                 outlets = data["outlets"],
                                 collab = data["collab"],
                                 laptops = data["laptops"],
-                                furniture_moved = data["furniture_moved"],
-                                unix_timestamp = utils.unix_timestamp()
+                                furniture_moved = data["furniture_moved"]
+                                #unix_timestamp = utils.unix_timestamp()
                                 # owner=group
                             )
                     #zone.save()
