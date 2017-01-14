@@ -2,19 +2,23 @@
 {% block head_scripts %}
 
         <!--  Leaflet.draw-master  -->
-        <script src="/static/leaflet.js"></script>
-        <link rel="stylesheet" href="/static/leaflet.css" />
-
-        <!-- D3 and JQuery -->
-        <script src="/static/js/jquery-1.11.0.js"></script>  <!-- | JQUERY -->
-        <!-- <script src="/static/js/jquery-ui-1.11.4.js"></script> -->  <!-- JQUERY UI -->
-        <script src = "/static/js/d3.js"></script>
+        <script src="/static/leaflet/leaflet-src.js"></script>
+        <link rel="stylesheet" href="/static/leaflet/leaflet.css" />
 
         <!-- Font Awesome CSS -->
         <link rel="stylesheet" href="/static/font-awesome-4.3.0/css/font-awesome.min.css">
 
         <!-- Main style -->
-        <link rel="stylesheet" href="/static/mapClient.css" />       
+        <style type="text/css">
+  #map {
+    right: 0;
+    left: 0;
+    bottom: 0;
+    top: 50px;
+    position: absolute !important;
+  }
+        </style>
+
 
 {% endblock %}
 {% block content %}
