@@ -59,14 +59,7 @@
     function sendZoneInfo(){
         var payload = {
             uuid: "zone1",
-            name: "zone1",
-            state: 0,
-            noise: 2,
-            users: 4,
-            outlets: 5,
-            collab: 4,
-            laptops: 3,
-            furniture_moved: 6,
+            outlets_used: 5,
             csrfmiddlewaretoken: '{{ csrf_token|safe }}'
         }
         $.ajax({

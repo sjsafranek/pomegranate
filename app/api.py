@@ -89,7 +89,7 @@ def zone_export(request):
                 zone.created_timestamp,
                 zone.updated_timestamp,
                 zone.username,
-                zone.outlets_user,
+                zone.outlets_used,
                 zone.unix_timestamp])
         return response
 
@@ -118,13 +118,13 @@ class Worker(threading.Thread):
                 zone = self._queue.get()
                 self.c += 1
                 self._writer.writerow([
-                zone.id,
-                zone.uuid,
-                zone.created_timestamp,
-                zone.updated_timestamp,
-                zone.username,
-                zone.outlets_user,
-                zone.unix_timestamp])
+                    zone.id,
+                    zone.uuid,
+                    zone.created_timestamp,
+                    zone.updated_timestamp,
+                    zone.username,
+                    zone.outlets_used,
+                    zone.unix_timestamp])
 
 def process(writer):
     job_id = utils.short_uuid()
