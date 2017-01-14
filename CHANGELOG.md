@@ -3,11 +3,17 @@
 ## Unreleased
 
 
+## 0.01.6 2017-01-14
+### Added
+ - api routes for Person and Room
+ - modal form popup for adding and editing features
+### Changed
+ - Cleaned static files
 
 ## 0.01.5 2017-01-13
 ### Changed
  - Split Zones table and added Rooms table
- = Split Furninture table and added Persons table
+ - Split Furninture table and added Persons table
 
 ## 0.01.4 2017-01-13
 ### Added
