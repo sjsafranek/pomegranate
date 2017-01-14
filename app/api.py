@@ -123,31 +123,29 @@ def zone_export(request):
 
 
 
-
-
-#from . import ligneous
-#log = ligneous.log("Worker")
-worker_logger = logging.getLogger('django')
+worker_logger = logging.getLogger('worker')
 import random
 
 class Worker(threading.Thread):
-    def __init__(self, writer, queue):
+    def __init__(self, job_id, worker_id, writer, job_queue):
         threading.Thread.__init__(self)
+        self.worker_id = worker_id
+        self.job_id = job_id
+        self.c = 0
         self._writer = writer
-        self._queue = queue
+        self._queue = job_queue
     def run(self):
         while True:
             # read from queue
             # stop worker when queue is empty
             if self._queue.empty():
-                #print("die!") # if so, exists the loop
+                msg = '[{}] [{}] {} messages received'.format(self.job_id, self.worker_id, self.c)
+                worker_logger.debug(msg)
                 break
             # write csv row
             else:
                 zone = self._queue.get()
-                #time.sleep(random.random()/10)
-                #print("remaining jobs:", self._queue.qsize())
-                worker_logger.debug("Cool")
+                self.c += 1
                 self._writer.writerow([
 					zone.id,
 					zone.uuid,
@@ -164,18 +162,20 @@ class Worker(threading.Thread):
 					zone.furniture_moved,
 					zone.unix_timestamp])
 
-queue = queue.Queue()
-
 def process(writer):
+    job_id = utils.short_uuid()
+    job_queue = queue.Queue()
     # spawn workers
     workers = []
     pool_size =  multiprocessing.cpu_count() * 2
     for i in range(pool_size):
-        worker = Worker(writer, queue)
+        worker = Worker(job_id, i, writer, job_queue)
         workers.append(worker)
     # fill queue with jobs
     for zone in Zone.objects.all():
-        queue.put(zone)
+        job_queue.put(zone)
+    msg = '[{}] {}: {}'.format(job_id, "jobs", job_queue.qsize())
+    worker_logger.info(msg)
     # start workers
     for i in range(len(workers)):
         workers[i].start()
@@ -183,7 +183,7 @@ def process(writer):
     for i in range(len(workers)):
         worker.join()
 
-@login_required(login_url='/')
+#@login_required(login_url='/')
 def zone_export_multithread(request):
     '''Returns csv file containing zone measurements'''
     # TODO: superuser only!!

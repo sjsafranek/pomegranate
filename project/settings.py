@@ -127,12 +127,10 @@ LOGGING = {
     'disable_existing_loggers': False,
 	'formatters': {
         'color': {
-            #'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
             '()': 'djangocolors_formatter.DjangoColorsFormatter',
 			'format': "%(asctime)s [%(levelname)s] [%(name)s] %(filename)s line:%(lineno)d : %(message)s",
         },
         'verbose': {
-            #'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
 			'format': "%(asctime)s [%(levelname)s] [%(name)s] %(filename)s line:%(lineno)d : %(message)s",
         },
         'simple': {
@@ -140,10 +138,22 @@ LOGGING = {
         },
     },
     'handlers': {
-        'file': {
+        'server': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': 'log/server.log',
+            'formatter': 'verbose'
+        },
+        'django': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'log/django.log',
+            'formatter': 'verbose'
+        },
+        'worker': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'log/worker.log',
             'formatter': 'verbose'
         },
 		'console': {
@@ -153,34 +163,39 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console','file'],
+            'handlers': ['console','django'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'django.request': {
-			'handlers': ['console','file'],
+			'handlers': ['console','django'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'django.server': {
-			'handlers': ['console','file'],
+			'handlers': ['console','django'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'django.template': {
-			'handlers': ['console','file'],
+			'handlers': ['console','django'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'django.db.backends': {
-			'handlers': ['console','file'],
+			'handlers': ['console','django'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'django.security.*': {
-			'handlers': ['console','file'],
+			'handlers': ['console','django'],
             'level': 'DEBUG',
             'propagate': False,
+        },
+		'worker': {
+            'handlers': ['console','worker'],
+            'level': 'DEBUG',
+            'propagate': True,
         },
     },
 }
