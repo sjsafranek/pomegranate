@@ -43,10 +43,10 @@ class Furniture(models.Model):
     def save(self, force_insert=False, force_update=False, using=None):
         if not self.id:
             self.unix_timestamp = utils.unix_timestamp()
-        if not self.uuid:
+        if not self.uuid or "" == self.uuid:
             self.uuid = utils.long_uuid()
         self.unix_timestamp = utils.unix_timestamp()
-        super(Zone, self).save()
+        super(Furniture, self).save()
 
     def toGeoJSON(self):
         return  { 
@@ -88,7 +88,7 @@ class Person(models.Model):
         if not self.id:
             self.unix_timestamp = utils.unix_timestamp()
         self.unix_timestamp = utils.unix_timestamp()
-        super(Zone, self).save()
+        super(Person, self).save()
 
 
 class Zone(models.Model):
@@ -120,7 +120,7 @@ class Room(models.Model):
         if not self.id:
             self.unix_timestamp = utils.unix_timestamp()
         self.unix_timestamp = utils.unix_timestamp()
-        super(Zone, self).save()
+        super(Room, self).save()
 
 
 

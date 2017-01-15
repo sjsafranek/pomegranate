@@ -27,79 +27,76 @@
         {% csrf_token %}
 
         <div class="container-fluid">
+            
             <div class="row">
                 <div id='map'> </div>
             </div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="featureSubmitModal" role="dialog">
+                <div class="modal-dialog">
 
+                  <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 style="color:red;">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> Add/Edit Feature
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="formFeatureType">Feature type</label>
+                                <select class="form-control" id="formFeatureType">
+                                    <option>Room</option>
+                                    <option>Zone</option>
+                                    <option>Furniture</option>
+                                    <option>Person</option>
+                                </select>
+                            </div>
+                            <form role="form" id="featureSubmitForm">
 
-  <!-- Modal -->
-<div class="modal fade" id="featureSubmitModal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 style="color:red;">
-                    <i class="fa fa-map-marker" aria-hidden="true"></i> Add/Edit Feature
-                </h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="formFeatureType">Feature type</label>
-                    <select class="form-control" id="formFeatureType">
-                        <option>Room</option>
-                        <option>Zone</option>
-                        <option>Furniture</option>
-                        <option>Person</option>
-                    </select>
+                                <div class="form-group">
+                                    <label for="noise"> Messy</label>
+                                    <select class="form-control featureAttribute" id="messy">
+                                        <option value="false">False</option>
+                                        <option value="true">True</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="noise"> Noise</label>
+                                    <input type="number" min="1" max="5" value="1" class="form-control featureAttribute" id="noise">
+                                </div>
+                            </form>
+                            <button class="btn btn-default btn-success btn-block" id="submitFeature">
+                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Submit
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal">
+                                <i class="fa fa-times" aria-hidden="true"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <form role="form" id="featureSubmitForm">
-
-                    <div class="form-group">
-                        <label for="noise"> Messy</label>
-                        <select class="form-control featureAttribute" id="messy">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="noise"> Noise</label>
-                        <input type="number" min="1" max="5" value="1" class="form-control featureAttribute" id="noise">
-                    </div>
-
-                    <button type="submit" class="btn btn-default btn-success btn-block" id="submitFeature">
-                        <i class="fa fa-cloud-upload" aria-hidden="true"></i> Submit
-                    </button>
-                </form>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal">
-                    <i class="fa fa-times" aria-hidden="true"></i> Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 
         </div>
 
         <script>
 
-/*
-$("#featureSubmitForm .form-group").remove()
-
-*/
-
             // var username = "{{ username|safe }}";
 
-            var formView = new FeatureFormView();
             var map;
-            var marker = L.marker()
-                .on("click", function(e){
+            var marker = L.marker();
+            var formView = new FeatureFormView(marker, '{{ csrf_token|safe }}');                
+            marker.on("click", function(e){
+                    $("#formFeatureType").html("");
+                    $("#formFeatureType").append("<option>Furniture</option>");
+                    $("#formFeatureType").append("<option>Person</option>");
+                    //ormView.$el.find("#featureSubmitForm").prepend(
+                        formView.clearForm()
+                    //);
                     $("#featureSubmitModal").modal('show');
                 });
 

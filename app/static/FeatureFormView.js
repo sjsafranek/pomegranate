@@ -3,7 +3,7 @@
 
 	    el: "#featureSubmitModal",
 
-	    initialize: function(){
+	    initialize: function(marker, csrf_token){
 	    	var self = this;
 	        _.bindAll(
 	        	this, 
@@ -13,30 +13,108 @@
 				'zoneTemplate',
 				'personTemplate',
 				'furnitureTemplate',
+				'submitPerson',
+				'submitFurniture',
+				'ajaxPost',
+				'ajaxResponseHandler',
 				'submit'
 	        );
-
+	        this.marker = marker;
+	        this.csrf_token = csrf_token;
 			this.render();
-
 	    },
 
 	    events: {
 	        "change #formFeatureType": "clearForm",
-	        'click button[type="submit"]': "submit"
+	        'click #submitFeature': "submit"
 	    },
 
 	    submit: function(e) {
-			var featureType = $("#formFeatureType").val();
-	    	switch(featureType) {
-			    case "Room":
-			        console.log("Room");
-			        break;
-			    case "Zone":
-			        console.log("Zone");
-			        break;
-			    default:
-			        console.log("unknown");
+	    	var self = this;
+			swal({
+				title: "Are you sure?",
+				text: "Your will not be able to edit data!",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonClass: "btn-danger",
+				confirmButtonText: "Yes, submit data!",
+				showLoaderOnConfirm: true,
+				closeOnConfirm: false
+			},
+			function(){
+				// Submitting feature
+				var featureType = $("#formFeatureType").val();
+		    	switch(featureType) {
+				    case "Room":
+				        // self.submitRoom();
+				        // break;
+				    case "Zone":
+				        // self.submitZone();
+				        // break;
+				    case "Person":
+				        self.submitPerson();
+				        break;
+				    default:
+				        self.submitFurniture();
+				}
+			});
+	    },
+
+	    submitPerson: function(e) {
+	    	var self = this;
+			var elems = this.$el.find(".featureAttribute");
+			payload = {};
+			for (var i=0; i < elems.length; i++) {
+				payload[$(elems[i]).attr("id")] = $(elems[i]).val();
 			}
+			payload.longitude = this.marker.getLatLng().lng;
+			payload.latitude = this.marker.getLatLng().lat;
+			payload.csrf_token = this.csrf_token;
+			this.ajaxPost("/api/v1/person", payload, this.ajaxResponseHandler);
+	    },
+
+	    submitFurniture: function(e) {
+	    	var self = this;
+			var elems = this.$el.find(".featureAttribute");
+			payload = {};
+			for (var i=0; i < elems.length; i++) {
+				payload[$(elems[i]).attr("id")] = $(elems[i]).val();
+			}
+			payload.longitude = this.marker.getLatLng().lng;
+			payload.latitude = this.marker.getLatLng().lat;
+			payload.csrf_token = this.csrf_token;
+			this.ajaxPost("/api/v1/furniture", payload, this.ajaxResponseHandler);
+	    },
+
+	    ajaxPost: function(url, payload, callback) {
+			$.ajax({
+	            type: "POST",
+	            data:  JSON.stringify(payload),
+	            url: url,
+	            dataType: 'JSON',
+	            success: function (data) {
+	                callback(null, data);
+	            },
+	            error: function(xhr,errmsg,err) {
+	                callback(new Error(errmsg));
+	            }
+	        });
+	    },
+
+	    ajaxResponseHandler: function(error, result) {
+	    	if (error) {
+	    		swal("Error!", error, "error");
+	    		return;
+	    	}
+	    	if ("ok" != result.status) {
+	    		swal("Error!", JSON.stringify(result), "error");
+	    	} else {
+	    		swal("Submitted!", JSON.stringify(result), "success");
+	    	}
+	    	// setTimeout(function () {
+	    	// 	swal("Submitted!", "Your data has been submitted.", "success");
+	    	// 	self.$el.modal('hide');
+	    	// }, 2000);
 	    },
 
 	    roomTemplate: function(e) {
@@ -62,8 +140,8 @@
 	    
 	    personTemplate: function(e) {
 			return '<div class="form-group">'
-                + '    <label for="type"> Person Type</label>'
-                + '    <select class="form-control featureAttribute" id="type">'
+                + '    <label for="person_type"> Person Type</label>'
+                + '    <select class="form-control featureAttribute" id="person_type">'
                 + '        <option value="ACADEMIC">Academic</option>'
                 + '        <option value="PUBLIC">Public</option>'
                 + '    </select>'
@@ -89,11 +167,11 @@
 	    furnitureTemplate: function(e) {
 			return '<div class="form-group">'
                 + '    <label for="uuid"> UUID</label>'
-                + '    <input type="text" disabled id="uuid">'
+                + '    <input type="text" class="form-control featureAttribute" disabled id="uuid">'
                 + '</div>'
                 + '<div class="form-group">'
                 + '    <label for="rfid"> RFID</label>'
-                + '    <input type="text" id="rfid">'
+                + '    <input type="text" class="form-control featureAttribute" id="rfid">'
                 + '</div>'
 
                 + '<div class="form-group">'

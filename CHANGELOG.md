@@ -7,6 +7,7 @@
 ### Added
  - api routes for Person and Room
  - modal form popup for adding and editing features
+ - submit persons and furniture
 ### Changed
  - Cleaned static files
 

@@ -112,7 +112,6 @@ def person_info(request):
                     body = request.body.decode("utf-8") 
                     data = json.loads(body)
                     person = Person.objects.create(
-                                uuid = data["uuid"],
                                 username = request.user.username,
                                 person_type = data["person_type"],
                                 collab = data["collab"],
@@ -149,7 +148,7 @@ def furniture_info(request):
                     # read post body for data
                     body = request.body.decode("utf-8") 
                     data = json.loads(body)
-                    room = Room.objects.create(
+                    furniture = Furniture.objects.create(
                                 uuid = data["uuid"],
                                 username = request.user.username,
                                 furniture_type = data["furniture_type"],
@@ -157,7 +156,7 @@ def furniture_info(request):
                                 latitude = data["latitude"],
                                 longitude = data["longitude"]
                             )
-                    room.save()
+                    furniture.save()
                     return JsonResponse(
                         ApiResponse.ok())
                 
