@@ -3,6 +3,13 @@
 ## Unreleased
 
 
+
+## 0.01.7 2017-01-14
+### Added
+ - display and edit furniture features
+### Changed
+ - rfid unique
+
 ## 0.01.6 2017-01-14
 ### Added
  - api routes for Person and Room

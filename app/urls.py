@@ -20,5 +20,6 @@ urlpatterns = [
 	url(r'^api/v1/furniture$', api_imports.furniture_info),
 	url(r'^api/v1/person$', api_imports.person_info),
     url(r'^api/v1/zones/export$', api_exports.zone_export),
+    url(r'^api/v1/furniture/export$', api_exports.furniture_export),
     url(r'^api/v2/zones/export$', apiV2.zone_export_multithread)
 ]

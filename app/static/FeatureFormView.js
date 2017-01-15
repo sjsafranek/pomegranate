@@ -3,7 +3,7 @@
 
 	    el: "#featureSubmitModal",
 
-	    initialize: function(marker, csrf_token){
+	    initialize: function(csrf_token){
 	    	var self = this;
 	        _.bindAll(
 	        	this, 
@@ -19,7 +19,6 @@
 				'ajaxResponseHandler',
 				'submit'
 	        );
-	        this.marker = marker;
 	        this.csrf_token = csrf_token;
 			this.render();
 	    },
@@ -67,8 +66,8 @@
 			for (var i=0; i < elems.length; i++) {
 				payload[$(elems[i]).attr("id")] = $(elems[i]).val();
 			}
-			payload.longitude = this.marker.getLatLng().lng;
-			payload.latitude = this.marker.getLatLng().lat;
+			payload.longitude = $("#longitude").val();
+			payload.latitude = $("#latitude").val();
 			payload.csrf_token = this.csrf_token;
 			this.ajaxPost("/api/v1/person", payload, this.ajaxResponseHandler);
 	    },
@@ -80,10 +79,11 @@
 			for (var i=0; i < elems.length; i++) {
 				payload[$(elems[i]).attr("id")] = $(elems[i]).val();
 			}
-			payload.longitude = this.marker.getLatLng().lng;
-			payload.latitude = this.marker.getLatLng().lat;
+			payload.longitude = $("#longitude").val();
+			payload.latitude = $("#latitude").val();
 			payload.csrf_token = this.csrf_token;
 			this.ajaxPost("/api/v1/furniture", payload, this.ajaxResponseHandler);
+			getFeatures();
 	    },
 
 	    ajaxPost: function(url, payload, callback) {

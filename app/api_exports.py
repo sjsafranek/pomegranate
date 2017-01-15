@@ -65,3 +65,45 @@ def zone_export(request):
                 zone.outlets_used,
                 zone.unix_timestamp])
         return response
+
+    return JsonResponse(
+        ApiResponse.method_not_allowed(request.method, ["GET"]),
+        status=400)
+
+
+
+@login_required(login_url='/')
+def furniture_export(request):
+    '''Returns geojson containing last known furniture locations'''
+
+    if not request.user.is_authenticated():
+        return JsonResponse(
+            ApiResponse.not_authenticated(), 
+            status=401)
+
+    if request.method == "GET":
+        #job_id = utils.short_uuid()
+        featureCollection =   {
+            "type": "FeatureCollection",
+            "features": []
+        }
+        
+        #for feature in Furniture.objects.all():
+        features = Furniture.objects.order_by("unix_timestamp")
+        features = features.reverse()
+        uuids = []
+        for feature in features:
+            if feature.uuid not in uuids:
+                uuids.append(feature.uuid)
+                featureCollection["features"].append(feature.toGeoJSON());
+
+        return JsonResponse({
+            "status": "ok",
+            "data": {
+                "layer": featureCollection
+            }
+        })
+
+    return JsonResponse(
+        ApiResponse.method_not_allowed(request.method, ["GET"]),
+        status=400)

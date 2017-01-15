@@ -54,6 +54,10 @@
                                     <option>Person</option>
                                 </select>
                             </div>
+                            <div style="display:none;">
+                                <input type="number" value="0" class="form-control featureAttribute" id="latitude">
+                                <input type="number" value="0" class="form-control featureAttribute" id="longitude">
+                            </div>
                             <form role="form" id="featureSubmitForm">
 
                                 <div class="form-group">
@@ -89,16 +93,67 @@
 
             var map;
             var marker = L.marker();
-            var formView = new FeatureFormView(marker, '{{ csrf_token|safe }}');                
+            // var layer;
+            var formView = new FeatureFormView('{{ csrf_token|safe }}');                
             marker.on("click", function(e){
                     $("#formFeatureType").html("");
                     $("#formFeatureType").append("<option>Furniture</option>");
                     $("#formFeatureType").append("<option>Person</option>");
-                    //ormView.$el.find("#featureSubmitForm").prepend(
-                        formView.clearForm()
-                    //);
+                    formView.clearForm();
+                    //$("#rfid").prop("disabled", true);
+                    $("#longitude").val(marker.getLatLng().lng);
+                    $("#latitude").val(marker.getLatLng().lat);
                     $("#featureSubmitModal").modal('show');
                 });
+
+            var markers = [];
+
+            function getFeatures() {
+                var payload = {
+                    csrfmiddlewaretoken: '{{ csrf_token|safe }}'
+                }
+                $.ajax({
+                    type: "GET",
+                    async: true,
+                    data:  JSON.stringify(payload),
+                    url: "/api/v1/furniture/export",
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if ("ok" != data.status) {
+                            swal("Error!", JSON.stringify(data), "error");
+                            return;
+                        }
+                        for (var i in markers) {
+                            map.removeLayer(markers[i]);
+                        }
+                        markers = [];
+                        var features = data.data.layer.features;
+                        for (var i in features) {
+                            var newMarker = new L.marker({
+                                lng: features[i].geometry.coordinates[0],
+                                lat: features[i].geometry.coordinates[1]
+                            }, {draggable:'true'});
+                            newMarker.feature = features[i];
+                            newMarker.on("click", function(){
+                                $("#formFeatureType").html("");
+                                $("#formFeatureType").append("<option>Furniture</option>");
+                                formView.clearForm();
+                                $("#uuid").val(this.feature.properties.uuid);
+                                $("#rfid").val(this.feature.properties.rfid);
+                                $("#rfid").prop("disabled", true);
+                                $("#longitude").val(this.getLatLng().lng);
+                                $("#latitude").val(this.getLatLng().lat);
+                                $("#featureSubmitModal").modal('show');
+                            });
+                            newMarker.addTo(map);
+                            markers.push(newMarker);
+                        }
+                    },
+                    error: function(xhr,errmsg,err) {
+                        throw new Error(errmsg);
+                    }
+                });
+            }
 
             $(function(){
 
@@ -117,35 +172,9 @@
                     }
                 });
 
+                getFeatures();
+
             });
-
-
-
-
- 
-    function sendZoneInfo(){
-        var payload = {
-            uuid: "zone1",
-            outlets_used: 5,
-            csrfmiddlewaretoken: '{{ csrf_token|safe }}'
-        }
-        $.ajax({
-            type: "POST",
-            async: true,
-            data:  JSON.stringify(payload),
-            url: "/api/v1/zone",
-            dataType: 'JSON',
-            success: function (data) {
-                console.log(data)
-            },
-            error: function(xhr,errmsg,err) {
-                throw new Error(errmsg);
-            }
-        });
-
-
-
-}
 
         </script>
 

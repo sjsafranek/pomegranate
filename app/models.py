@@ -31,7 +31,7 @@ class Furniture(models.Model):
     )
     id = models.AutoField(primary_key=True)
     uuid = models.CharField(max_length=50)
-    rfid = models.CharField(max_length=50)
+    rfid = models.CharField(max_length=50, unique=True)
     furniture_type = models.CharField(max_length=25, choices=TYPES)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
