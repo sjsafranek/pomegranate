@@ -59,7 +59,6 @@
                                 <input type="number" value="0" class="form-control featureAttribute" id="longitude">
                             </div>
                             <form role="form" id="featureSubmitForm">
-
                                 <div class="form-group">
                                     <label for="noise"> Messy</label>
                                     <select class="form-control featureAttribute" id="messy">
@@ -141,6 +140,8 @@
                                 $("#uuid").val(this.feature.properties.uuid);
                                 $("#rfid").val(this.feature.properties.rfid);
                                 $("#rfid").prop("disabled", true);
+                                $("#furniture_type").val(this.feature.properties.furniture_type);
+                                $("#furniture_type").prop("disabled", true);
                                 $("#longitude").val(this.getLatLng().lng);
                                 $("#latitude").val(this.getLatLng().lat);
                                 $("#featureSubmitModal").modal('show');

@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-from django.db import models
+# from django.db import models
+from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 #from django.contrib.auth.models import Group
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -39,6 +41,8 @@ class Furniture(models.Model):
     username = models.CharField(max_length=25)
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
+    geom = models.PointField(srid=4326)
+    #geom = models.PointField(srid=900913)
 
     def save(self, force_insert=False, force_update=False, using=None):
         if not self.id:
@@ -47,7 +51,17 @@ class Furniture(models.Model):
             self.uuid = utils.long_uuid()
         if not self.rfid or "" == self.rfid:
             raise ValueError("rfid cannot be NULL")
-        self.unix_timestamp = utils.unix_timestamp()
+        self.geom = Point(
+            float(self.longitude), 
+            float(self.latitude)
+        )
+        #print(dir(self.geom))
+        #print(self.geom.wkt)
+        #print(self.geom.srid)
+        #print(self.geom.crs)
+        #print(self.geom.geom_type)
+        #print(self.geom.geojson) # type == str
+        #self.unix_timestamp = utils.unix_timestamp()
         super(Furniture, self).save()
 
     def toGeoJSON(self):
@@ -85,11 +99,17 @@ class Person(models.Model):
     username = models.CharField(max_length=25)
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
+    geom = models.PointField(srid=4326)
+    #geom = models.PointField(srid=900913)
 
     def save(self, force_insert=False, force_update=False, using=None):
         if not self.id:
             self.unix_timestamp = utils.unix_timestamp()
-        self.unix_timestamp = utils.unix_timestamp()
+        self.geom = Point(
+            float(self.longitude), 
+            float(self.latitude)
+        )
+        #self.unix_timestamp = utils.unix_timestamp()
         super(Person, self).save()
 
 
@@ -105,7 +125,7 @@ class Zone(models.Model):
     def save(self, force_insert=False, force_update=False, using=None):
         if not self.id:
             self.unix_timestamp = utils.unix_timestamp()
-        self.unix_timestamp = utils.unix_timestamp()
+        #self.unix_timestamp = utils.unix_timestamp()
         super(Zone, self).save()
 
 
@@ -121,7 +141,7 @@ class Room(models.Model):
     def save(self, force_insert=False, force_update=False, using=None):
         if not self.id:
             self.unix_timestamp = utils.unix_timestamp()
-        self.unix_timestamp = utils.unix_timestamp()
+        #self.unix_timestamp = utils.unix_timestamp()
         super(Room, self).save()
 
 
