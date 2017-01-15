@@ -4,7 +4,7 @@ import os
 import json
 import ligneous
 
-logger = ligneous.log("SkeletonDB") 
+logger = ligneous.log("database") 
 
 
 def load(location="skeleton.db", fsave=True, verbose=True):
