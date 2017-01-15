@@ -46,18 +46,18 @@ def zone_info(request):
                                 outlets_used = data["outlets_used"]
                             )
                     zone.save()
-                    logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+                    logger.info('{} {} {}'.format(request.method, request.path, 200))
                     return JsonResponse(
                         ApiResponse.ok())
                 
                 else:
-                    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+                    logger.warning('{} {} {}'.format(request.method, request.path, 401))
                     return JsonResponse(
                         ApiResponse.not_authenticated(), 
                         status=401)
             
             except Exception as e:
-                logger.error('{} {} {}'.format(request.method, request.get_full_path(), 500))
+                logger.error('{} {} {}'.format(request.method, request.path, 500))
                 return JsonResponse(
                     ApiResponse.fatal(e), 
                     status=500)
@@ -66,7 +66,7 @@ def zone_info(request):
             # Stuff here
         #    return redirect('/map')
 
-    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    logger.warning('{} {} {}'.format(request.method, request.path, 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["POST"]),
         status=400)
@@ -90,23 +90,23 @@ def room_info(request):
                                 noise = data["noise"]
                             )
                     room.save()
-                    logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+                    logger.info('{} {} {}'.format(request.method, request.path, 200))
                     return JsonResponse(
                         ApiResponse.ok())
                 
                 else:
-                    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+                    logger.warning('{} {} {}'.format(request.method, request.path, 401))
                     return JsonResponse(
                         ApiResponse.not_authenticated(), 
                         status=401)
             
             except Exception as e:
-                logger.error('{} {} {}'.format(request.method, request.get_full_path(), 500))
+                logger.error('{} {} {}'.format(request.method, request.path, 500))
                 return JsonResponse(
                     ApiResponse.fatal(e), 
                     status=500)
 
-    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    logger.warning('{} {} {}'.format(request.method, request.path, 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["POST"]),
         status=400)
@@ -132,23 +132,23 @@ def person_info(request):
                                 longitude = data["longitude"]
                             )
                     person.save()
-                    logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+                    logger.info('{} {} {}'.format(request.method, request.path, 200))
                     return JsonResponse(
                         ApiResponse.ok())
                 
                 else:
-                    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+                    logger.warning('{} {} {}'.format(request.method, request.path, 401))
                     return JsonResponse(
                         ApiResponse.not_authenticated(), 
                         status=401)
             
             except Exception as e:
-                logger.error('{} {} {}'.format(request.method, request.get_full_path(), 500))
+                logger.error('{} {} {}'.format(request.method, request.path, 500))
                 return JsonResponse(
                     ApiResponse.fatal(e), 
                     status=500)
 
-    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    logger.warning('{} {} {}'.format(request.method, request.path, 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["POST"]),
         status=400)
@@ -174,23 +174,23 @@ def furniture_info(request):
                                 longitude = data["longitude"]
                             )
                     furniture.save()
-                    logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+                    logger.info('{} {} {}'.format(request.method, request.path, 200))
                     return JsonResponse(
                         ApiResponse.ok())
                 
                 else:
-                    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+                    logger.warning('{} {} {}'.format(request.method, request.path, 401))
                     return JsonResponse(
                         ApiResponse.not_authenticated(), 
                         status=401)
             
             except Exception as e:
-                logger.error('{} {} {}'.format(request.method, request.get_full_path(), 500))
+                logger.error('{} {} {}'.format(request.method, request.path, 500))
                 return JsonResponse(
                     ApiResponse.fatal(e), 
                     status=500)
 
-    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    logger.warning('{} {} {}'.format(request.method, request.path, 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["POST"]),
         status=400)

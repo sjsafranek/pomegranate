@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block head_scripts %}
 
-        <!--  Leaflet.draw-master  -->
+        <!--  Leaflet  -->
         <script src="/static/leaflet/leaflet-src.js"></script>
         <link rel="stylesheet" href="/static/leaflet/leaflet.css" />
+        <link rel="stylesheet" href="/static/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css">
+        <script src="/static/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js"></script>
 
         <script src="/static/backbone/underscore-min.js"></script>
         <script src="/static/backbone/backbone-min.js"></script>
@@ -12,6 +14,7 @@
 
         <!-- Main style -->
         <style type="text/css">
+            
             #map {
                 right: 0;
                 left: 0;
@@ -19,6 +22,32 @@
                 top: 50px;
                 position: absolute !important;
             }
+
+            .info {
+                padding: 6px 8px;
+                font: 14px/16px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+
+            .legend {
+                line-height: 18px;
+                color: #555;
+            }
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin-right: 8px;
+                opacity: 0.7;
+            }
+
         </style>
 
 {% endblock %}
@@ -91,8 +120,8 @@
             // var username = "{{ username|safe }}";
 
             var map;
-            var marker = L.marker();
-            // var layer;
+            var marker = L.marker([],{draggable:'true'});
+
             var formView = new FeatureFormView('{{ csrf_token|safe }}');                
             marker.on("click", function(e){
                     $("#formFeatureType").html("");
@@ -128,10 +157,18 @@
                         markers = [];
                         var features = data.data.layer.features;
                         for (var i in features) {
+                            var icon = L.AwesomeMarkers.icon({
+                                icon: 'circle',
+                                prefix: 'fa',
+                                markerColor: 'cadetblue'
+                            });
                             var newMarker = new L.marker({
                                 lng: features[i].geometry.coordinates[0],
                                 lat: features[i].geometry.coordinates[1]
-                            }, {draggable:'true'});
+                            }, {
+                                draggable: 'true',
+                                icon: icon
+                            });
                             newMarker.feature = features[i];
                             newMarker.on("click", function(){
                                 $("#formFeatureType").html("");
@@ -165,10 +202,34 @@
                 }).addTo(map);
 
                 map.setView( [0,0], 1 );
+/*
+                // Color legend
+                var legend = L.control({position: 'bottomright'});
 
+                legend.onAdd = function (map) {
+
+                    var div = L.DomUtil.create('div', 'info legend');
+                    div.innerHTML = "<h4>Legend</h4>"
+
+                    div.innerHTML += '<i style="background: cadetblue;"></i> Furniture <br>';
+                    div.innerHTML += '<i style="background: blue;"></i> New Feature <br>';
+
+                    return div;
+                };
+
+                legend.addTo(map);
+*/
+                // Create new features
                 map.on("click", function(e){
                     marker.setLatLng(e.latlng);
                     if (!marker.hasOwnProperty("_map")) {
+                        var icon = L.AwesomeMarkers.icon({
+                            icon: 'cloud-upload',
+                            prefix: 'fa',
+                            markerColor: 'blue'
+                            // 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+                        });
+                        marker.setIcon(icon);
                         marker.addTo(map);
                     }
                 });

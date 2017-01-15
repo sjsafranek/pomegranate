@@ -34,13 +34,13 @@ def zone_export_csv(request):
     '''Returns csv file containing zone measurements'''
 
     if not request.user.is_authenticated():
-        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        logger.warning('{} {} {}'.format(request.method, request.path, 401))
         return JsonResponse(
             ApiResponse.not_authenticated(), 
             status=401)
 
     if not request.user.is_superuser:
-        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        logger.warning('{} {} {}'.format(request.method, request.path, 401))
         return JsonResponse(
             ApiResponse.unauthorized(), 
             status=401)
@@ -69,10 +69,10 @@ def zone_export_csv(request):
                 row.created_timestamp,
                 row.updated_timestamp
         ])
-        logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+        logger.info('{} {} {}'.format(request.method, request.path, 200))
         return response
 
-    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    logger.warning('{} {} {}'.format(request.method, request.path, 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["GET"]),
         status=400)
@@ -85,13 +85,13 @@ def furniture_export_csv(request):
     '''Returns csv file containing furniture measurements'''
 
     if not request.user.is_authenticated():
-        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        logger.warning('{} {} {}'.format(request.method, request.path, 401))
         return JsonResponse(
             ApiResponse.not_authenticated(), 
             status=401)
 
     if not request.user.is_superuser:
-        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        logger.warning('{} {} {}'.format(request.method, request.path, 401))
         return JsonResponse(
             ApiResponse.unauthorized(), 
             status=401)
@@ -130,10 +130,10 @@ def furniture_export_csv(request):
                 row.created_timestamp,
                 row.updated_timestamp
         ])
-        logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+        logger.info('{} {} {}'.format(request.method, request.path, 200))
         return response
 
-    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    logger.warning('{} {} {}'.format(request.method, request.path, 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["GET"]),
         status=400)
@@ -144,13 +144,13 @@ def person_export_csv(request):
     '''Returns csv file containing person features'''
 
     if not request.user.is_authenticated():
-        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        logger.warning('{} {} {}'.format(request.method, request.path, 401))
         return JsonResponse(
             ApiResponse.not_authenticated(), 
             status=401)
 
     if not request.user.is_superuser:
-        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        logger.warning('{} {} {}'.format(request.method, request.path, 401))
         return JsonResponse(
             ApiResponse.unauthorized(), 
             status=401)
@@ -189,10 +189,10 @@ def person_export_csv(request):
                 row.created_timestamp,
                 row.updated_timestamp
         ])
-        logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+        logger.info('{} {} {}'.format(request.method, request.path, 200))
         return response
 
-    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    logger.warning('{} {} {}'.format(request.method, request.path, 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["GET"]),
         status=400)
@@ -203,7 +203,7 @@ def furniture_export_geojson(request):
     '''Returns geojson containing last known furniture locations'''
 
     if not request.user.is_authenticated():
-        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        logger.warning('{} {} {}'.format(request.method, request.path, 401))
         return JsonResponse(
             ApiResponse.not_authenticated(), 
             status=401)
@@ -223,7 +223,7 @@ def furniture_export_geojson(request):
                 uuids.append(feature.uuid)
                 featureCollection["features"].append(feature.toGeoJSON());
 
-        logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+        logger.info('{} {} {}'.format(request.method, request.path, 200))
         return JsonResponse({
             "status": "ok",
             "data": {
@@ -231,7 +231,7 @@ def furniture_export_geojson(request):
             }
         })
 
-    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    logger.warning('{} {} {}'.format(request.method, request.path, 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["GET"]),
         status=400)

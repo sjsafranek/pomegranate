@@ -4,6 +4,11 @@
 
 
 
+## 0.01.7 2017-01-15
+### Changed
+ - draggable new feature marker
+ - new color icons
+
 ## 0.01.7 2017-01-14
 ### Added
  - display and edit furniture features
