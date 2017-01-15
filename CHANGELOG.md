@@ -9,6 +9,8 @@
  - display and edit furniture features
 ### Changed
  - rfid unique
+### Fixed
+ - furniture type cant change 
 
 ## 0.01.6 2017-01-14
 ### Added
