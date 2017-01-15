@@ -27,6 +27,7 @@ import logging
 logger = logging.getLogger("api")
 
 from .api_response import ApiResponse
+# from . import database
 
 
 @csrf_exempt
@@ -46,6 +47,7 @@ def zone_info(request):
                                 outlets_used = data["outlets_used"]
                             )
                     zone.save()
+                    # database.commit(zone)
                     logger.info('{} {} {}'.format(request.method, request.path, 200))
                     return JsonResponse(
                         ApiResponse.ok())
@@ -90,6 +92,7 @@ def room_info(request):
                                 noise = data["noise"]
                             )
                     room.save()
+                    # database.commit(room)
                     logger.info('{} {} {}'.format(request.method, request.path, 200))
                     return JsonResponse(
                         ApiResponse.ok())
@@ -132,6 +135,7 @@ def person_info(request):
                                 longitude = data["longitude"]
                             )
                     person.save()
+                    # database.commit(person)
                     logger.info('{} {} {}'.format(request.method, request.path, 200))
                     return JsonResponse(
                         ApiResponse.ok())
@@ -174,6 +178,7 @@ def furniture_info(request):
                                 longitude = data["longitude"]
                             )
                     furniture.save()
+                    # database.commit(furniture)
                     logger.info('{} {} {}'.format(request.method, request.path, 200))
                     return JsonResponse(
                         ApiResponse.ok())

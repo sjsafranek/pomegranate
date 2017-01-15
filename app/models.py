@@ -51,6 +51,8 @@ class Furniture(models.Model):
             self.uuid = utils.long_uuid()
         if not self.rfid or "" == self.rfid:
             raise ValueError("rfid cannot be NULL")
+        # if not self.longitude or self.latitude or "" == self.longitude or "" == self.latitude:  
+        #   raise ValueError("Invalid Feature Geometry")
         self.geom = Point(
             float(self.longitude), 
             float(self.latitude)
@@ -100,11 +102,12 @@ class Person(models.Model):
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
     geom = models.PointField(srid=4326)
-    #geom = models.PointField(srid=900913)
 
     def save(self, force_insert=False, force_update=False, using=None):
         if not self.id:
             self.unix_timestamp = utils.unix_timestamp()
+        # if not self.longitude or self.latitude or "" == self.longitude or "" == self.latitude:  
+        #   raise ValueError("Invalid Feature Geometry")
         self.geom = Point(
             float(self.longitude), 
             float(self.latitude)
