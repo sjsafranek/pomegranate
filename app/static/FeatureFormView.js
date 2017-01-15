@@ -83,7 +83,9 @@
 			payload.latitude = $("#latitude").val();
 			payload.csrf_token = this.csrf_token;
 			this.ajaxPost("/api/v1/furniture", payload, this.ajaxResponseHandler);
-			getFeatures();
+			setTimeout(function(){
+				getFeatures();
+			},1000);
 	    },
 
 	    ajaxPost: function(url, payload, callback) {
@@ -96,25 +98,22 @@
 	                callback(null, data);
 	            },
 	            error: function(xhr,errmsg,err) {
-	                callback(new Error(errmsg));
+	                callback(new Error(xhr), xhr.responseJSON);
 	            }
 	        });
 	    },
 
 	    ajaxResponseHandler: function(error, result) {
 	    	if (error) {
-	    		swal("Error!", error, "error");
+	    		swal("Error!", JSON.stringify(result), "error");
 	    		return;
 	    	}
 	    	if ("ok" != result.status) {
 	    		swal("Error!", JSON.stringify(result), "error");
 	    	} else {
 	    		swal("Submitted!", JSON.stringify(result), "success");
+	    		this.$el.modal('hide');
 	    	}
-	    	// setTimeout(function () {
-	    	// 	swal("Submitted!", "Your data has been submitted.", "success");
-	    	// 	self.$el.modal('hide');
-	    	// }, 2000);
 	    },
 
 	    roomTemplate: function(e) {
@@ -170,7 +169,7 @@
                 + '    <input type="text" class="form-control featureAttribute" disabled id="uuid">'
                 + '</div>'
                 + '<div class="form-group">'
-                + '    <label for="rfid"> RFID</label>'
+                + '    <label for="rfid"> RFID</label> *'
                 + '    <input type="text" class="form-control featureAttribute" id="rfid">'
                 + '</div>'
 
@@ -199,7 +198,6 @@
                 + '    </select>'
                 + '</div>';
 	    },
-
 
 	    clearForm: function(e) {
 	    	this.$el.find("#featureSubmitForm .form-group").remove();

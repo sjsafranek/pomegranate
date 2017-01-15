@@ -31,7 +31,7 @@ class Furniture(models.Model):
     )
     id = models.AutoField(primary_key=True)
     uuid = models.CharField(max_length=50)
-    rfid = models.CharField(max_length=50, unique=True)
+    rfid = models.CharField(max_length=50, blank=False, null=False)
     furniture_type = models.CharField(max_length=25, choices=TYPES)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
@@ -45,6 +45,8 @@ class Furniture(models.Model):
             self.unix_timestamp = utils.unix_timestamp()
         if not self.uuid or "" == self.uuid:
             self.uuid = utils.long_uuid()
+        if not self.rfid or "" == self.rfid:
+            raise ValueError("rfid cannot be NULL")
         self.unix_timestamp = utils.unix_timestamp()
         super(Furniture, self).save()
 

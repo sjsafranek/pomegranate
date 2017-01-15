@@ -116,7 +116,7 @@
                     type: "GET",
                     async: true,
                     data:  JSON.stringify(payload),
-                    url: "/api/v1/furniture/export",
+                    url: "/api/v1/furniture/geojson",
                     dataType: 'JSON',
                     success: function (data) {
                         if ("ok" != data.status) {

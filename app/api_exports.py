@@ -29,7 +29,7 @@ from .api_response import ApiResponse
 
 
 @login_required(login_url='/')
-def zone_export(request):
+def zone_export_csv(request):
     '''Returns csv file containing zone measurements'''
 
     if not request.user.is_authenticated():
@@ -50,20 +50,22 @@ def zone_export(request):
         writer.writerow([
             "id",
             "uuid",
-            "created_timestamp",
-            "updated_timestamp",
-            "username",
             "outlets_used",
-            "unix_timestamp"])
-        for zone in Zone.objects.all():
+            "username",
+            "unix_timestamp",
+            "created_timestamp",
+            "updated_timestamp"
+        ])
+        for row in Zone.objects.all():
             writer.writerow([
-                zone.id,
-                zone.uuid,
-                zone.created_timestamp,
-                zone.updated_timestamp,
-                zone.username,
-                zone.outlets_used,
-                zone.unix_timestamp])
+                row.id,
+                row.uuid,
+                row.outlets_used,
+                row.username,
+                row.unix_timestamp,
+                row.created_timestamp,
+                row.updated_timestamp
+        ])
         return response
 
     return JsonResponse(
@@ -72,8 +74,60 @@ def zone_export(request):
 
 
 
+
 @login_required(login_url='/')
-def furniture_export(request):
+def furniture_export_csv(request):
+    '''Returns csv file containing furniture measurements'''
+
+    if not request.user.is_authenticated():
+        return JsonResponse(
+            ApiResponse.not_authenticated(), 
+            status=401)
+
+    if not request.user.is_superuser:
+        return JsonResponse(
+            ApiResponse.unauthorized(), 
+            status=401)
+
+    if request.method == "GET":
+        #job_id = utils.short_uuid()
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="furniture.csv"'
+        writer = csv.writer(response)
+        writer.writerow([
+            "id",
+            "uuid",
+            "rfid",
+            "furniture_type",
+            "latitude",
+            "longitude",
+            "username",
+            "unix_timestamp",
+            "created_timestamp",
+            "updated_timestamp"
+        ])
+        for row in Furniture.objects.all():
+            writer.writerow([
+                row.id,
+                row.uuid,
+                row.rfid,
+                row.furniture_type,
+                row.latitude,
+                row.longitude,
+                row.username,
+                row.unix_timestamp,
+                row.created_timestamp,
+                row.updated_timestamp
+        ])
+        return response
+
+    return JsonResponse(
+        ApiResponse.method_not_allowed(request.method, ["GET"]),
+        status=400)
+
+
+@login_required(login_url='/')
+def furniture_export_geojson(request):
     '''Returns geojson containing last known furniture locations'''
 
     if not request.user.is_authenticated():
@@ -88,7 +142,6 @@ def furniture_export(request):
             "features": []
         }
         
-        #for feature in Furniture.objects.all():
         features = Furniture.objects.order_by("unix_timestamp")
         features = features.reverse()
         uuids = []

@@ -19,7 +19,8 @@ urlpatterns = [
 	url(r'^api/v1/room$', api_imports.room_info),
 	url(r'^api/v1/furniture$', api_imports.furniture_info),
 	url(r'^api/v1/person$', api_imports.person_info),
-    url(r'^api/v1/zones/export$', api_exports.zone_export),
-    url(r'^api/v1/furniture/export$', api_exports.furniture_export),
+    url(r'^api/v1/zones/csv$', api_exports.zone_export_csv),
+    url(r'^api/v1/furniture/geojson$', api_exports.furniture_export_geojson),
+    url(r'^api/v1/furniture/csv$', api_exports.furniture_export_csv),
     url(r'^api/v2/zones/export$', apiV2.zone_export_multithread)
 ]
