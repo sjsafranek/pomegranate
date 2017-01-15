@@ -23,7 +23,8 @@ from . import utils
 import csv
 import json
 import logging
-#logger = logging.getLogger(__name__)
+
+logger = logging.getLogger("api")
 
 from .api_response import ApiResponse
 
@@ -38,21 +39,25 @@ def zone_info(request):
                     # read post body for data
                     body = request.body.decode("utf-8") 
                     data = json.loads(body)
+                    logger.debug(data)
                     zone = Zone.objects.create(
                                 uuid = data["uuid"],
                                 username = request.user.username,
                                 outlets_used = data["outlets_used"]
                             )
                     zone.save()
+                    logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
                     return JsonResponse(
                         ApiResponse.ok())
                 
                 else:
+                    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
                     return JsonResponse(
                         ApiResponse.not_authenticated(), 
                         status=401)
             
             except Exception as e:
+                logger.error('{} {} {}'.format(request.method, request.get_full_path(), 500))
                 return JsonResponse(
                     ApiResponse.fatal(e), 
                     status=500)
@@ -61,6 +66,7 @@ def zone_info(request):
             # Stuff here
         #    return redirect('/map')
 
+    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["POST"]),
         status=400)
@@ -76,6 +82,7 @@ def room_info(request):
                     # read post body for data
                     body = request.body.decode("utf-8") 
                     data = json.loads(body)
+                    logger.debug(data)
                     room = Room.objects.create(
                                 uuid = data["uuid"],
                                 username = request.user.username,
@@ -83,19 +90,23 @@ def room_info(request):
                                 noise = data["noise"]
                             )
                     room.save()
+                    logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
                     return JsonResponse(
                         ApiResponse.ok())
                 
                 else:
+                    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
                     return JsonResponse(
                         ApiResponse.not_authenticated(), 
                         status=401)
             
             except Exception as e:
+                logger.error('{} {} {}'.format(request.method, request.get_full_path(), 500))
                 return JsonResponse(
                     ApiResponse.fatal(e), 
                     status=500)
 
+    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["POST"]),
         status=400)
@@ -111,6 +122,7 @@ def person_info(request):
                     # read post body for data
                     body = request.body.decode("utf-8") 
                     data = json.loads(body)
+                    logger.debug(data)
                     person = Person.objects.create(
                                 username = request.user.username,
                                 person_type = data["person_type"],
@@ -120,19 +132,23 @@ def person_info(request):
                                 longitude = data["longitude"]
                             )
                     person.save()
+                    logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
                     return JsonResponse(
                         ApiResponse.ok())
                 
                 else:
+                    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
                     return JsonResponse(
                         ApiResponse.not_authenticated(), 
                         status=401)
             
             except Exception as e:
+                logger.error('{} {} {}'.format(request.method, request.get_full_path(), 500))
                 return JsonResponse(
                     ApiResponse.fatal(e), 
                     status=500)
 
+    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["POST"]),
         status=400)
@@ -148,6 +164,7 @@ def furniture_info(request):
                     # read post body for data
                     body = request.body.decode("utf-8") 
                     data = json.loads(body)
+                    logger.debug(data)
                     furniture = Furniture.objects.create(
                                 uuid = data["uuid"],
                                 username = request.user.username,
@@ -157,58 +174,24 @@ def furniture_info(request):
                                 longitude = data["longitude"]
                             )
                     furniture.save()
+                    logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
                     return JsonResponse(
                         ApiResponse.ok())
                 
                 else:
+                    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
                     return JsonResponse(
                         ApiResponse.not_authenticated(), 
                         status=401)
             
             except Exception as e:
+                logger.error('{} {} {}'.format(request.method, request.get_full_path(), 500))
                 return JsonResponse(
                     ApiResponse.fatal(e), 
                     status=500)
 
+    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["POST"]),
         status=400)
 
-
-@login_required(login_url='/')
-def zone_export(request):
-    '''Returns csv file containing zone measurements'''
-
-    if not request.user.is_authenticated():
-        return JsonResponse(
-            ApiResponse.not_authenticated(), 
-            status=401)
-
-    if not request.user.is_superuser:
-        return JsonResponse(
-            ApiResponse.unauthorized(), 
-            status=401)
-
-    if request.method == "GET":
-		#job_id = utils.short_uuid()
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = 'attachment; filename="zones.csv"'
-        writer = csv.writer(response)
-        writer.writerow([
-            "id",
-            "uuid",
-            "created_timestamp",
-            "updated_timestamp",
-            "username",
-            "outlets_used",
-            "unix_timestamp"])
-        for zone in Zone.objects.all():
-            writer.writerow([
-                zone.id,
-                zone.uuid,
-                zone.created_timestamp,
-                zone.updated_timestamp,
-                zone.username,
-                zone.outlets_used,
-                zone.unix_timestamp])
-        return response

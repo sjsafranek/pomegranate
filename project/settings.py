@@ -149,8 +149,11 @@ STATIC_URL = '/static/'
 
 
 LOGGING = {
+    
     'version': 1,
+    
     'disable_existing_loggers': False,
+
 	'formatters': {
         'color': {
             '()': 'djangocolors_formatter.DjangoColorsFormatter',
@@ -163,6 +166,7 @@ LOGGING = {
             'format': '%(levelname)s %(message)s'
         },
     },
+
     'handlers': {
         'server': {
             'level': 'DEBUG',
@@ -182,11 +186,18 @@ LOGGING = {
             'filename': 'log/worker.log',
             'formatter': 'verbose'
         },
+        'api': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'log/api.log',
+            'formatter': 'verbose'
+        },
 		'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'color'
         },
     },
+
     'loggers': {
         'django': {
             'handlers': ['console','django'],
@@ -214,14 +225,20 @@ LOGGING = {
             'propagate': False,
         },
         'django.security.*': {
-			'handlers': ['console','django'],
+            'handlers': ['console','django'],
             'level': 'DEBUG',
             'propagate': False,
         },
-		'worker': {
+        'worker': {
             'handlers': ['console','worker'],
             'level': 'DEBUG',
             'propagate': True,
         },
+        'api': {
+            'handlers': ['console','api'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
+    
 }

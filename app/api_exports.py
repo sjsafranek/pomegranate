@@ -23,7 +23,8 @@ from . import utils
 import csv
 import json
 import logging
-#logger = logging.getLogger(__name__)
+
+logger = logging.getLogger("api")
 
 from .api_response import ApiResponse
 
@@ -33,11 +34,13 @@ def zone_export_csv(request):
     '''Returns csv file containing zone measurements'''
 
     if not request.user.is_authenticated():
+        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
         return JsonResponse(
             ApiResponse.not_authenticated(), 
             status=401)
 
     if not request.user.is_superuser:
+        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
         return JsonResponse(
             ApiResponse.unauthorized(), 
             status=401)
@@ -66,8 +69,10 @@ def zone_export_csv(request):
                 row.created_timestamp,
                 row.updated_timestamp
         ])
+        logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
         return response
 
+    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["GET"]),
         status=400)
@@ -80,11 +85,13 @@ def furniture_export_csv(request):
     '''Returns csv file containing furniture measurements'''
 
     if not request.user.is_authenticated():
+        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
         return JsonResponse(
             ApiResponse.not_authenticated(), 
             status=401)
 
     if not request.user.is_superuser:
+        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
         return JsonResponse(
             ApiResponse.unauthorized(), 
             status=401)
@@ -99,8 +106,8 @@ def furniture_export_csv(request):
             "uuid",
             "rfid",
             "furniture_type",
-            "latitude",
             "longitude",
+            "latitude",
             "geom_wkt",
             "srid",
             "username",
@@ -114,8 +121,8 @@ def furniture_export_csv(request):
                 row.uuid,
                 row.rfid,
                 row.furniture_type,
-                row.latitude,
                 row.longitude,
+                row.latitude,
                 row.geom.wkt,
                 row.geom.srid,
                 row.username,
@@ -123,8 +130,69 @@ def furniture_export_csv(request):
                 row.created_timestamp,
                 row.updated_timestamp
         ])
+        logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
         return response
 
+    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
+    return JsonResponse(
+        ApiResponse.method_not_allowed(request.method, ["GET"]),
+        status=400)
+
+
+@login_required(login_url='/')
+def person_export_csv(request):
+    '''Returns csv file containing person features'''
+
+    if not request.user.is_authenticated():
+        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        return JsonResponse(
+            ApiResponse.not_authenticated(), 
+            status=401)
+
+    if not request.user.is_superuser:
+        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
+        return JsonResponse(
+            ApiResponse.unauthorized(), 
+            status=401)
+
+    if request.method == "GET":
+        #job_id = utils.short_uuid()
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="persons.csv"'
+        writer = csv.writer(response)
+        writer.writerow([
+            "id",
+            "person_type",
+            "computer_type",
+            "collab",
+            "longitude",
+            "latitude",
+            "geom_wkt",
+            "srid",
+            "username",
+            "unix_timestamp",
+            "created_timestamp",
+            "updated_timestamp"
+        ])
+        for row in Person.objects.all():
+            writer.writerow([
+                row.id,
+                row.person_type,
+                row.computer_type,
+                row.collab,
+                row.longitude,
+                row.latitude,
+                row.geom.wkt,
+                row.geom.srid,
+                row.username,
+                row.unix_timestamp,
+                row.created_timestamp,
+                row.updated_timestamp
+        ])
+        logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
+        return response
+
+    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["GET"]),
         status=400)
@@ -135,6 +203,7 @@ def furniture_export_geojson(request):
     '''Returns geojson containing last known furniture locations'''
 
     if not request.user.is_authenticated():
+        logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 401))
         return JsonResponse(
             ApiResponse.not_authenticated(), 
             status=401)
@@ -154,6 +223,7 @@ def furniture_export_geojson(request):
                 uuids.append(feature.uuid)
                 featureCollection["features"].append(feature.toGeoJSON());
 
+        logger.info('{} {} {}'.format(request.method, request.get_full_path(), 200))
         return JsonResponse({
             "status": "ok",
             "data": {
@@ -161,6 +231,7 @@ def furniture_export_geojson(request):
             }
         })
 
+    logger.warning('{} {} {}'.format(request.method, request.get_full_path(), 400))
     return JsonResponse(
         ApiResponse.method_not_allowed(request.method, ["GET"]),
         status=400)
