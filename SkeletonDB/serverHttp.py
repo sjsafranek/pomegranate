@@ -18,7 +18,7 @@ from tornado.options import parse_command_line
 
 
 import ligneous
-logger = ligneous.log("server")
+logger = ligneous.log("http")
 
 import database
 db = database.load()
