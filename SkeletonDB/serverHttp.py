@@ -3,13 +3,10 @@
 # import tornado.escape
 
 from tornado.ioloop import IOLoop
-import signal
-import socket
 import time
 import tornado.web
 import os.path
 import json
-import logging
 
 from tornado.concurrent import Future
 from tornado.options import define
@@ -24,13 +21,14 @@ import database
 db = database.load()
 
 
-define("port", default=8000, help="run on the given port", type=int)
+define("port", default=8000, help="http run on the given port", type=int)
+define("tcp", default=5816, help="tcp run on the given port", type=int)
 define("debug", default=False, help="run in debug mode")
 
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("SkeletonDb Server")
+        self.write("SkeletonDb Http Server")
 
 
 class GetHandler(tornado.web.RequestHandler):
@@ -71,10 +69,6 @@ def main():
     )
     app.listen(options.port)
     logger.info("listing on port "+str(options.port))
-    IOLoop.current().start()
-
-    server.bind(8888)
-    server.start(0)  # Forks multiple sub-processes
     IOLoop.current().start()
 
 

@@ -22,6 +22,7 @@ class Connection(object):
 		self.address = address
 		self.stream.set_close_callback(self._on_close)
 		self.stream.read_until(b"\n", self._on_read_line)
+		self.stream.write(b"SkeletonDb Tcp Server", self._on_write_complete)
 		self.stream.write(b"skeleton!> ", self._on_write_complete)
 	
 	def _on_read_line(self, data):
@@ -79,6 +80,7 @@ class Server(TCPServer):
 def main():
 	chat_server = Server()
 	chat_server.listen(8888)
+	chat_server.start(0)
 	IOLoop.instance().start()
 
 
