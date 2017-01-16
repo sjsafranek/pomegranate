@@ -40,6 +40,7 @@ class Database(object):
         if self.verbose: 
             logger.info("insert")
         self._dumpdb(self.fsave)
+        return True
 
     def get(self, key):
         '''Get the value of a key'''
@@ -67,8 +68,10 @@ class Database(object):
 
     def remove(self, key):
         '''Delete a key'''
-        del self.db[key]
-        self._dumpdb(self.fsave)
+        if key in self.db:
+            del self.db[key]
+            self._dumpdb(self.fsave)
+        return True
 
     def _deldb(self):
         '''Delete everything from the database'''

@@ -4,7 +4,8 @@ Based on echo server http://tornadogists.org/1231481/ by phus
 @author: mark-allen
 '''
 
-import logging
+import ligneous
+logging = ligneous.log("tcp")
 
 from tornado.ioloop import IOLoop
 from tornado.iostream import IOStream
@@ -20,43 +21,46 @@ class ChatConnection(object):
 		self.stream = stream
 		self.address = address
 		self.stream.set_close_callback(self._on_close)
-		self.stream.read_until('\n', self._on_read_line)
-		stream.write("Enter your name: ", self._on_write_complete)
+		self.stream.read_until(b"\n", self._on_read_line)
+		stream.write(b"Enter your name: ", self._on_write_complete)
 	
 	def _on_read_line(self, data):
 		logging.info('read a new line from %s', self.address)
 		if self.state == 'AUTH':
 			name = data.rstrip();
-			if self.connections.has_key(name):
-				self.stream.write('Name taken, choose another: ', self._on_write_complete)
+			if name in self.connections:
+				self.stream.write(b"Name taken, choose another: ", self._on_write_complete)
 				return
-			# message = 'Welcome, %s!\n' % (name)
-			self.stream.write('Welcome, %s!\n' % (name), self._on_write_complete)
+			msg = "Welcome, %s!\n" % (name)
+			self.stream.write(msg.encode(), self._on_write_complete)
 			self.connections[name] = self
 			self.name = name
 			self.state = 'CHAT'
-			message = '%s has arrived\n' % (self.name)
-			for _,conn in self.connections.iteritems():
+			message = "%s has arrived\n" % (self.name)
+			for i in self.connections:
+				conn = self.connections[i]
 				if conn != self:
-					conn.stream.write(message, self._on_write_complete)
+					conn.stream.write(message.encode(), self._on_write_complete)
 		else:
 			message = '<%s> %s\n' % (self.name, data.rstrip())
-			for _,conn in self.connections.iteritems():
+			for i in self.connections:
+				conn = self.connections[i]
 				if conn != self:
-					conn.stream.write(message, self._on_write_complete)
+					conn.stream.write(message.encode(), self._on_write_complete)
 	
 	def _on_write_complete(self):
-		logging.info('wrote a line to %s', self.address)
+		logging.info("wrote a line to %s", self.address)
 		if not self.stream.reading():
-			self.stream.read_until('\n', self._on_read_line)
+			self.stream.read_until(b"\n", self._on_read_line)
 	
 	def _on_close(self):
-		logging.info('client quit %s', self.address)
+		logging.info("client quit %s", self.address)
 		if self.name != None:
 			del self.connections[self.name]
-			message = '%s has left\n' % (self.name)
-			for _,conn in self.connections.iteritems():
-				conn.stream.write(message, self._on_write_complete)
+			message = "%s has left\n" % (self.name)
+			for i in self.connections:
+				conn = self.connections[i]
+				conn.stream.write(message.encode(), self._on_write_complete)
 
 class ChatServer(TCPServer):
 
