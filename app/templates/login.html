@@ -93,7 +93,11 @@
 										<i class="fa fa-sign-in" aria-hidden="true"></i> <b>Sign in</b>
 									</button>
 								</div>
-
+							<!--
+								<a href="#" class="forgot-password">
+									Forgot password?
+								</a> 
+                            -->
                             </form>
                         </div>
                     </div>
@@ -116,6 +120,7 @@
 			// Login stuff
 			$(function() {
 				var credentials = localStorage.getItem("credentials");
+								$('#log-out').on("click", function(){
 				if (credentials) {
 					$("#remember input").prop("checked",true);
 					credentials = JSON.parse(credentials);
