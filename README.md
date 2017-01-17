@@ -30,5 +30,10 @@
 ### Vagrant
 	$ vagrant init
 	$ vagrant up
+	visit http://172.20.0.10:8080/
+
+
 vagrant box add https://atlas.hashicorp.com/debian/boxes/jessie64/ --provider virtualbox
+sudo systemctl status pomegranate.service
 sudo journalctl -f -u pomegranate.service
+
