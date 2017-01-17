@@ -14,7 +14,6 @@ admin.site.register(Person, admin.GeoModelAdmin)
 admin.site.register(Room, admin.GeoModelAdmin)
 
 
-
 #conf.py
 #import builtins
 #
