@@ -5,3 +5,5 @@ __pycache__
 *.log
 django_cache
 app/migrations/00*.py
+.vagrant
+

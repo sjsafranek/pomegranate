@@ -120,7 +120,6 @@
 			// Login stuff
 			$(function() {
 				var credentials = localStorage.getItem("credentials");
-								$('#log-out').on("click", function(){
 				if (credentials) {
 					$("#remember input").prop("checked",true);
 					credentials = JSON.parse(credentials);
@@ -140,6 +139,7 @@
 					localStorage.removeItem("credentials");
 				}
 			});
+
 
 			$("#username").keypress(function(e){
 				if (e.which == 13) {
@@ -279,6 +279,7 @@
 				};
 			  };
 			})();
+
         </script>
         
     </body>

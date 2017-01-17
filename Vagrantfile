@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# DeoDjango Vagrant Box
+# https://github.com/david-wilson/vagrant-geodjango-base
+
 # VM Customized Settings
 $CPUS              = 1
 $MEMORY            = 512
@@ -8,7 +11,8 @@ $MEMORY            = 512
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
-Vagrant::Config.run do |config|
+#Vagrant::Config.run do |config|
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	# Base box to build off, and download URL for when it doesn't exist on the user's system already
 	#config.vm.box = "ubuntu/trusty32"
 	config.vm.box = "debian/jessie64"
@@ -30,7 +34,8 @@ Vagrant::Config.run do |config|
 	
 	# Forward a port from the guest to the host, which allows for outside
 	# computers to access the VM, whereas host only networking does not.
-	config.vm.forward_port 8000, 8000
+	config.vm.network :forwarded_port, guest: 8080, host: 8080
+	#config.vm.network "private_network", ip: "172.20.0.10", netmask: "255.240.0.0", :mac => "08002719318B"
 	
 	# Share an additional folder to the guest VM. The first argument is
 	# an identifier, the second is the path on the guest to mount the
@@ -40,8 +45,17 @@ Vagrant::Config.run do |config|
 	# Enable provisioning with a shell script.
 	#config.vm.provision :shell, :path => "etc/install/install.sh", :args => "{{ project_name }}"
 	#config.vm.provision "shell", inline: 'aptitude -yy upgrade turnstile'
-	config.vm.provision "shell", inline: 'apt-get install python3-django'
-	config.vm.provision "shell", inline: 'apt-get install python3-jinja2'
+	#sudo apt-get install python3-pip
+	#  sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+	config.vm.provision "shell", inline: 'aptitude update'
+	config.vm.provision "shell", inline: 'aptitude -yy install install libgeos++'
+	config.vm.provision "shell", inline: 'aptitude -yy install install binutils libproj-dev gdal-bin'
+	config.vm.provision "shell", inline: 'aptitude -yy install python3-pip'
+	config.vm.provision "shell", inline: 'aptitude -yy install python3-gdal'
+	#config.vm.provision "shell", inline: 'aptitude -yy install python3-django'
+	config.vm.provision "shell", inline: 'pip3 install django'
+	config.vm.provision "shell", inline: 'aptitude -yy install python3-jinja2'
+	config.vm.provision "shell", inline: 'cd /vagrant; python3 manage.py runserver 0.0.0.0:8080 &'
 
 	config.vm.provider "virtualbox" do |v|
 		v.memory = $MEMORY
