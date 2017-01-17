@@ -31,3 +31,4 @@
 	$ vagrant init
 	$ vagrant up
 vagrant box add https://atlas.hashicorp.com/debian/boxes/jessie64/ --provider virtualbox
+sudo journalctl -f -u pomegranate.service
