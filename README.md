@@ -27,3 +27,6 @@
 	- add users
 
 
+### Vagrant
+	$ vagrant init
+	$ vagrant up
