@@ -8,6 +8,9 @@
 	$ sudo pip3 install jinja2
 
 * requires django 1.9 =<
+Django==1.10.5
+GDAL==1.10.1
+Jinja2==2.7.3
 
 ### Setup database::
 	$ python3 manage.py migrate
