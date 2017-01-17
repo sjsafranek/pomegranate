@@ -14,7 +14,12 @@
 	$ python3 manage.py makemigrations
 
 ### Create superuser::
-	$ python3 manage.py createsuperuser
+	Use auto generated admin user::
+		- username: admin
+		- password: dev
+	
+	Create new admin user::
+		$ python3 manage.py createsuperuser
 
 ### Launch server::
 	$ python3 manage.py runserver
