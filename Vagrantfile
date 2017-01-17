@@ -9,23 +9,28 @@ $CPUS              = 1
 $MEMORY            = 512
 
 
+
 $update_systemd = <<SCRIPT
 cat > /etc/systemd/system/pomegranate.service <<-EOF
 [Unit]
 Description=The Pomegranate Server
 
 [Service]
-TimeoutStartSec=1
+TimeoutStartSec=10
+RestartSec=10
 ExecStart=/usr/bin/python3 /vagrant/manage.py runserver 0.0.0.0:8080
+WorkingDirectory=/vagrant
 Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
+systemctl enable pomegranate.service
 systemctl daemon-reload
 systemctl start pomegranate.service
 SCRIPT
+
 
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
@@ -54,7 +59,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	
 	# Forward a port from the guest to the host, which allows for outside
 	# computers to access the VM, whereas host only networking does not.
-	config.vm.network :forwarded_port, guest: 8080, host: 8081
+	#config.vm.network :forwarded_port, guest: 8080, host: 8080
 	config.vm.network "private_network", ip: "172.20.0.10", netmask: "255.240.0.0", :mac => "08002719318B"
 	#config.vm.forwarded_port 8080, 4567
 	
@@ -68,15 +73,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	#config.vm.provision "shell", inline: 'aptitude -yy upgrade turnstile'
 	#  sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
 	config.vm.provision "shell", inline: 'aptitude update'
-	config.vm.provision "shell", inline: 'aptitude -yy install install libgeos++'
-	config.vm.provision "shell", inline: 'aptitude -yy install install binutils libproj-dev gdal-bin'
-	config.vm.provision "shell", inline: 'aptitude -yy install python3-pip'
-	config.vm.provision "shell", inline: 'aptitude -yy install python3-gdal'
-	#config.vm.provision "shell", inline: 'aptitude -yy install python3-django'
+	config.vm.provision "shell", inline: 'aptitude -yy install install libgeos++ binutils libproj-dev gdal-bin curl python3-pip python3-gdal python3-jinja2'
+	#config.vm.provision "shell", inline: 'aptitude -yy install install binutils libproj-dev gdal-bin'
+	#config.vm.provision "shell", inline: 'aptitude -yy install python3-pip'
+	#config.vm.provision "shell", inline: 'aptitude -yy install python3-gdal'
+	##config.vm.provision "shell", inline: 'aptitude -yy install python3-django'
 	config.vm.provision "shell", inline: 'pip3 install django'
-	config.vm.provision "shell", inline: 'aptitude -yy install python3-jinja2'
+	#config.vm.provision "shell", inline: 'aptitude -yy install python3-jinja2'
 	#config.vm.provision "shell", inline: 'mkdir /home/vagrant/log'
 	config.vm.provision "shell", inline: $update_systemd
+	config.vm.provision "shell", run: "always", inline: "systemctl restart pomegranate.service"
 
 	config.vm.provider "virtualbox" do |v|
 		v.memory = $MEMORY

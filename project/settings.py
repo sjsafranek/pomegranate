@@ -24,9 +24,12 @@ SECRET_KEY = '=phia2=!yholvkg9gqy81(5b(@0p(l&o1ewb0^!76my48swbol'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:8080', 'localhost:8080', '*',' 172.20.0.10',]
 
-ALLOWED_HOSTS = []
+#DEBUG = False
+#ALLOWED_HOSTS = []
 
+#ADMINS = [('Stefan', 'sjsafranek@gmail.com')]
 
 # Application definition
 
