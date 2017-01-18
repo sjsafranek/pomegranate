@@ -4,6 +4,11 @@
 
 
 
+
+## 0.01.7.1 2017-01-18
+ - Vagrantfile
+ - Dockerfile (*in progress)
+
 ## 0.01.7 2017-01-15
 ### Changed
  - draggable new feature marker
