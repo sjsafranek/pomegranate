@@ -32,6 +32,15 @@ systemctl start pomegranate.service
 SCRIPT
 
 
+$setup_db = <<SCRIPT
+if [ ! -f /vagrant/geo.sqlite3 ]; then
+	cd /vagrant
+	python3 manage.py migrate
+	python3 manage.py makemigrations
+	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@pomegranate.com', 'dev')" | python3 manage.py shell
+fi
+SCRIPT
+
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -39,8 +48,9 @@ VAGRANTFILE_API_VERSION = "2"
 #Vagrant::Config.run do |config|
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	# Base box to build off, and download URL for when it doesn't exist on the user's system already
-	#config.vm.box = "ubuntu/trusty32"
-	config.vm.box = "debian/jessie64"
+	#config.vm.box = "ubuntu/trusty64"
+	#config.vm.box = "debian/jessie64"
+	config.vm.box = "debian/contrib-jessie64"
 	
 	# Boot with a GUI so you can see the screen. (Default is headless)
 	# config.vm.boot_mode = :gui
@@ -59,11 +69,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	# folder, and the third is the path on the host to the actual folder.
 	#config.vm.share_folder "project", "/home/vagrant/{{ project_name }}", "."
 	
+	#config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+	#config.vm.synced_folder ".", "/vagrant", type: "rsync"
+	#config.vm.synced_folder ".", "/vagrant", nfs: true
+
 	# Enable provisioning with a shell script.
 	# sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
 	config.vm.provision "shell", inline: 'aptitude update'
 	config.vm.provision "shell", inline: 'aptitude -yy install install libgeos++ binutils libproj-dev gdal-bin curl htop python3-pip python3-gdal python3-jinja2'
 	config.vm.provision "shell", inline: 'pip3 install django'
+	config.vm.provision "shell", inline: $setup_db
 	config.vm.provision "shell", inline: $update_systemd
 	config.vm.provision "shell", run: "always", inline: "systemctl restart pomegranate.service"
 

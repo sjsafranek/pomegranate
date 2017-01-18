@@ -33,3 +33,9 @@ except Exception as e:
     #print(e)
     pass
 
+
+
+'''
+echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@pomegranate.com', 'dev')" | python3 manage.py shell
+
+'''
