@@ -3,18 +3,29 @@
 
 ## Quick Start
 
-### Install requirements::
-	$ sudo pip3 install django
-	$ sudo pip3 install jinja2
+### Install Spatialite
+#### Linux
+	sudo apt-get install spatialite-bin
+#### Windows
+	Download http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/mod_spatialite-4.3.0a-win-amd64.7z
+	Put into Path
+	Test: `python3 test_spatialite.py`
 
-* requires django 1.9 =<
-Django==1.10.5
-GDAL==1.10.1
-Jinja2==2.7.3
+### Install Requirements (Linux)
+#### Get requirements::
+	$ aptitude -yy install install libgeos++ binutils libproj-dev gdal-bin python3-pip python3-gdal python3-jinja2 python3-django 
+
+### Install Requirements (Windows)
+#### Get requirements::
+	pip3 install django
+	pip3 install jinja2
+	pip3 install pyspatialite
+	pip3 install GDAL
+	pip3 install sqlite3
 
 ### Setup database::
-	$ python3 manage.py migrate
 	$ python3 manage.py makemigrations
+	$ python3 manage.py migrate
 
 ### Create superuser::
 	Use auto generated admin user::
@@ -25,7 +36,6 @@ Jinja2==2.7.3
 		$ python3 manage.py createsuperuser
 
 ### Launch server::
-	$ python3 manage.py runserver
 	$ python3 manage.py runserver 0.0.0.0:8000
 
 ### Setup Users
@@ -36,9 +46,9 @@ Jinja2==2.7.3
 
 
 ### Vagrant
-	$ vagrant init
 	$ vagrant up
 	visit http://172.20.0.10:8080/
+	visit localhost:8080/
 
 
 vagrant box add https://atlas.hashicorp.com/debian/boxes/jessie64/ --provider virtualbox
