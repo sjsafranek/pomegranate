@@ -32,7 +32,7 @@
 	    	var self = this;
 			swal({
 				title: "Are you sure?",
-				text: "Your will not be able to edit data!",
+				text: "You will not be able to edit data!",
 				type: "warning",
 				showCancelButton: true,
 				confirmButtonClass: "btn-danger",
