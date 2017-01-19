@@ -5,7 +5,7 @@
 
 ### Install Spatialite
 #### Linux
-	sudo apt-get install spatialite-bin
+	#sudo apt-get install spatialite-bin
 #### Windows
 	Download http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/mod_spatialite-4.3.0a-win-amd64.7z
 	Put into Path
@@ -13,7 +13,7 @@
 
 ### Install Requirements (Linux)
 #### Get requirements::
-	$ aptitude -yy install install libgeos++ binutils libproj-dev gdal-bin python3-pip python3-gdal python3-jinja2 python3-django 
+	$ aptitude -yy install libgeos++ binutils libproj-dev gdal-bin python3-pip python3-gdal python3-jinja2 python3-django 
 
 ### Install Requirements (Windows)
 #### Get requirements::
