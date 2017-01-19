@@ -6,4 +6,4 @@ __pycache__
 django_cache
 app/migrations/00*.py
 .vagrant
-
+config.json

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -79,30 +80,18 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+DATABASES = config.get_db_config()
+'''
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.contrib.gis.db.backends.spatialite',
         'NAME': os.path.join(BASE_DIR, 'geo.sqlite3'),
         'OPTIONS': {
 			'timeout': 20
         }
-        #'ATOMIC_REQUESTS': True
     }
 }
-
 '''
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase',
-        'USER': 'mydatabaseuser',
-        'PASSWORD': 'mypassword',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-'''
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

@@ -61,11 +61,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	
 	# Assign this VM to a host only network IP, allowing you to access it
 	# via the IP.
-	config.vm.network "private_network", ip: "172.20.0.10", netmask: "255.240.0.0", :mac => "08002719318B"
+	#config.vm.network "private_network", ip: "172.20.0.10", netmask: "255.240.0.0", :mac => "08002719318B"
 	
 	# Forward a port from the guest to the host, which allows for outside
 	# computers to access the VM, whereas host only networking does not.
-	#config.vm.network :forwarded_port, guest: 8080, host: 8080
+	config.vm.network :forwarded_port, guest: 8080, host: 8080
 	
 	# Share an additional folder to the guest VM. The first argument is
 	# an identifier, the second is the path on the guest to mount the
