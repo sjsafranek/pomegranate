@@ -80,7 +80,8 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = config.get_db_config()
+DATABASES = Config.get_db_config()
+
 '''
 DATABASES = {
     'default': {
