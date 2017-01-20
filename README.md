@@ -23,6 +23,9 @@
 	pip3 install GDAL
 	pip3 install sqlite3
 
+### Run bootstrapper
+	$ ./bootstrapper.sh
+
 ### Setup database::
 	$ python3 manage.py makemigrations
 	$ python3 manage.py migrate
