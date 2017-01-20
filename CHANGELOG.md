@@ -3,9 +3,15 @@
 ## Unreleased
 
 
-
+## 0.01.7.2 2017-01-19
+### Added
+ - bootrapper.sh quick setup
+ - scripts directory
+### Changed
+ - edits to Vagrantfile
 
 ## 0.01.7.1 2017-01-18
+### Added
  - Vagrantfile
  - Dockerfile (*in progress)
 

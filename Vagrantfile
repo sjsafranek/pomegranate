@@ -76,7 +76,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	# Enable provisioning with a shell script.
 	# sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
 	config.vm.provision "shell", inline: 'aptitude update'
-	config.vm.provision "shell", inline: 'aptitude -yy install install libgeos++ binutils libproj-dev gdal-bin curl htop python3-pip python3-gdal python3-jinja2'
+	config.vm.provision "shell", inline: 'aptitude -yy install install libgeos++ binutils libproj-dev gdal-bin curl htop python3-pip python3-gdal python3-jinja2 python3-psycopg2'
 	config.vm.provision "shell", inline: 'pip3 install django'
 	config.vm.provision "shell", inline: $setup_db
 	config.vm.provision "shell", inline: $setup_systemd

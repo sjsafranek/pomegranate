@@ -141,6 +141,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+# check for lof directory
+# create directory if does not exist
+if not os.path.exists("log"):
+    os.makedirs("log")
+
+
 LOGGING = {
     
     'version': 1,
