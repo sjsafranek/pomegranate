@@ -46,6 +46,7 @@ SCRIPT
 
 $setup_db = <<SCRIPT
 cd /vagrant
+echo '{"default": {"ENGINE": "django.contrib.gis.db.backends.postgis","NAME": "pomegranatedb","USER": "pomegranateuser","PASSWORD": "dev","HOST": "127.0.0.1","PORT": "5432"}}' >> config.json
 ./bootstrapper.sh
 SCRIPT
 
