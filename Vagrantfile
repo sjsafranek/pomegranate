@@ -44,10 +44,19 @@ if [ ! -f /vagrant/geo.sqlite3 ]; then
 fi
 SCRIPT
 
+
 $setup_db = <<SCRIPT
 cd /vagrant
+
+sudo -u postgres psql -c "CREATE USER pomegranateuser WITH PASSWORD 'dev'"
+sudo -u postgres psql -c "CREATE DATABASE pomegranatedb"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE pomegranatedb TO pomegranateuser"
+sudo -u postgres psql -c "ALTER USER pomegranateuser WITH SUPERUSER;"
+sudo -u postgres psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology; CREATE EXTENSION fuzzystrmatch; CREATE EXTENSION postgis_tiger_geocoder;" pomegranatedb
+
 echo '{"default": {"ENGINE": "django.contrib.gis.db.backends.postgis","NAME": "pomegranatedb","USER": "pomegranateuser","PASSWORD": "dev","HOST": "127.0.0.1","PORT": "5432"}}' >> config.json
 ./bootstrapper.sh
+
 SCRIPT
 
 
@@ -84,9 +93,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	config.vm.provision "shell", inline: 'aptitude update'
 	config.vm.provision "shell", inline: 'aptitude -yy install install libgeos++ binutils libproj-dev gdal-bin curl htop python3-pip python3-gdal python3-jinja2 python3-psycopg2'
 	config.vm.provision "shell", inline: 'pip3 install django'
-	# sudo apt-get install postgresql
-	# sudo apt-get install postgis
-	# sudo apt-get install postgresql-9.4-postgis
+	config.vm.provision "shell", inline: 'sudo apt-get install postgresql'
+	#config.vm.provision "shell", inline: 'sudo apt-get install postgis'
+	config.vm.provision "shell", inline: 'sudo apt-get install postgresql-9.4-postgis'
 	config.vm.provision "shell", inline: $setup_db
 	config.vm.provision "shell", inline: $setup_systemd
 	config.vm.provision "shell", run: "always", inline: "systemctl restart pomegranate.service"
