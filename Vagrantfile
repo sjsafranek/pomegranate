@@ -35,13 +35,18 @@ SCRIPT
 
 # Setup database tables and models
 # creates superuser
-$setup_db = <<SCRIPT
+$setup_db_old = <<SCRIPT
 if [ ! -f /vagrant/geo.sqlite3 ]; then
 	cd /vagrant
 	python3 manage.py migrate
 	python3 manage.py makemigrations
 	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@pomegranate.com', 'dev')" | python3 manage.py shell
 fi
+SCRIPT
+
+$setup_db = <<SCRIPT
+cd /vagrant
+./bootstrapper.sh
 SCRIPT
 
 
@@ -78,6 +83,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	config.vm.provision "shell", inline: 'aptitude update'
 	config.vm.provision "shell", inline: 'aptitude -yy install install libgeos++ binutils libproj-dev gdal-bin curl htop python3-pip python3-gdal python3-jinja2 python3-psycopg2'
 	config.vm.provision "shell", inline: 'pip3 install django'
+	# sudo apt-get install postgresql
+	# sudo apt-get install postgis
+	# sudo apt-get install postgresql-9.4-postgis
 	config.vm.provision "shell", inline: $setup_db
 	config.vm.provision "shell", inline: $setup_systemd
 	config.vm.provision "shell", run: "always", inline: "systemctl restart pomegranate.service"
