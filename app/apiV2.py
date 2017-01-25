@@ -55,7 +55,7 @@ class Worker(threading.Thread):
                     zone.uuid,
                     zone.created_timestamp,
                     zone.updated_timestamp,
-                    zone.username,
+                    zone.created_by,
                     zone.outlets_used,
                     zone.unix_timestamp])
 
@@ -103,7 +103,7 @@ def zone_export_multithread(request):
             "uuid",
             "created_timestamp",
             "updated_timestamp",
-            "username",
+            "created_by",
             "outlets_used",
             "unix_timestamp"])
         process(writer)

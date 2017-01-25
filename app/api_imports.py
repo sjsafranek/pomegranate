@@ -43,7 +43,7 @@ def zone_info(request):
                     logger.debug(data)
                     zone = Zone.objects.create(
                                 uuid = data["uuid"],
-                                username = request.user.username,
+                                created_by = request.user.username,
                                 outlets_used = data["outlets_used"]
                             )
                     zone.save()
@@ -87,7 +87,7 @@ def room_info(request):
                     logger.debug(data)
                     room = Room.objects.create(
                                 uuid = data["uuid"],
-                                username = request.user.username,
+                                created_by = request.user.username,
                                 messy = data["messy"],
                                 noise = data["noise"]
                             )
@@ -127,7 +127,7 @@ def person_info(request):
                     data = json.loads(body)
                     logger.debug(data)
                     person = Person.objects.create(
-                                username = request.user.username,
+                                created_by = request.user.username,
                                 person_type = data["person_type"],
                                 collab = data["collab"],
                                 computer_type = data["computer_type"],
@@ -171,7 +171,7 @@ def furniture_info(request):
                     logger.debug(data)
                     furniture = Furniture.objects.create(
                                 uuid = data["uuid"],
-                                username = request.user.username,
+                                created_by = request.user.username,
                                 furniture_type = data["furniture_type"],
                                 rfid = data["rfid"],
                                 latitude = data["latitude"],

@@ -38,7 +38,7 @@ class Furniture(models.Model):
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
     unix_timestamp = models.IntegerField()
-    username = models.CharField(max_length=25)
+    created_by = models.CharField(max_length=25)
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
     geom = models.PointField(srid=4326)
@@ -98,7 +98,7 @@ class Person(models.Model):
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
     unix_timestamp = models.IntegerField()
-    username = models.CharField(max_length=25)
+    created_by = models.CharField(max_length=25)
     latitude = models.FloatField(validators = [MinValueValidator(-90), MaxValueValidator(90.0)])
     longitude = models.FloatField(validators = [MinValueValidator(-180.0), MaxValueValidator(180.0)])
     geom = models.PointField(srid=4326)
@@ -122,7 +122,7 @@ class Zone(models.Model):
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
     unix_timestamp = models.IntegerField()
-    username = models.CharField(max_length=25)
+    created_by = models.CharField(max_length=25)
     outlets_used = models.IntegerField()
 
     def save(self, force_insert=False, force_update=False, using=None):
@@ -137,7 +137,7 @@ class Room(models.Model):
     created_timestamp = models.DateTimeField(auto_now_add=True)
     updated_timestamp = models.DateTimeField(auto_now=True)
     unix_timestamp = models.IntegerField()
-    username = models.CharField(max_length=25)
+    created_by = models.CharField(max_length=25)
     messy = models.BooleanField()
     noise = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(5)])
 

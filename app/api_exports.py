@@ -54,7 +54,7 @@ def zone_export_csv(request):
             "id",
             "uuid",
             "outlets_used",
-            "username",
+            "created_by",
             "unix_timestamp",
             "created_timestamp",
             "updated_timestamp"
@@ -64,7 +64,7 @@ def zone_export_csv(request):
                 row.id,
                 row.uuid,
                 row.outlets_used,
-                row.username,
+                row.created_by,
                 row.unix_timestamp,
                 row.created_timestamp,
                 row.updated_timestamp
@@ -110,7 +110,7 @@ def furniture_export_csv(request):
             "latitude",
             "geom_wkt",
             "srid",
-            "username",
+            "created_by",
             "unix_timestamp",
             "created_timestamp",
             "updated_timestamp"
@@ -125,7 +125,7 @@ def furniture_export_csv(request):
                 row.latitude,
                 row.geom.wkt,
                 row.geom.srid,
-                row.username,
+                row.created_by,
                 row.unix_timestamp,
                 row.created_timestamp,
                 row.updated_timestamp
@@ -169,7 +169,7 @@ def person_export_csv(request):
             "latitude",
             "geom_wkt",
             "srid",
-            "username",
+            "created_by",
             "unix_timestamp",
             "created_timestamp",
             "updated_timestamp"
@@ -184,7 +184,7 @@ def person_export_csv(request):
                 row.latitude,
                 row.geom.wkt,
                 row.geom.srid,
-                row.username,
+                row.created_by,
                 row.unix_timestamp,
                 row.created_timestamp,
                 row.updated_timestamp
