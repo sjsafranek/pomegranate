@@ -66,6 +66,11 @@
 			for (var i=0; i < elems.length; i++) {
 				payload[$(elems[i]).attr("id")] = $(elems[i]).val();
 			}
+			if ("true" == payload.collab) {
+				payload.collab = true;
+			} else {
+				payload.collab = false;
+			}
 			payload.longitude = $("#longitude").val();
 			payload.latitude = $("#latitude").val();
 			payload.csrf_token = this.csrf_token;
